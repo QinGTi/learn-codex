@@ -624,7 +624,9 @@
         <div><span>5</span> Codex（Codex，AI 编程助手）实战</div>
         <div><span>6</span> RAG（Retrieval-Augmented Generation，检索增强生成/先检索资料再生成答案）</div>
         <div><span>7</span> Agent（Agent，智能体/会计划并用工具的 AI 系统）</div>
-        <div><span>8</span> Project（Project，项目制学习）展示</div>
+        <div><span>8</span> Skill（Skill，可复用任务能力）沉淀</div>
+        <div><span>9</span> Sub-agent（Sub-agent，子智能体）分工</div>
+        <div><span>10</span> Project（Project，项目制学习）展示</div>
       </div>
     </aside>
   </header>
@@ -660,6 +662,10 @@
           <h3>Codex 贯穿</h3>
           <p>所有 demo 都基于 Codex（Codex，能写代码、读项目、调试和运行检查的 AI 编程助手），重点训练目标、上下文、限制、完成标准、验证和迭代。</p>
         </article>
+        <article class="card highlight">
+          <h3>前沿工作流</h3>
+          <p>后半段加入 Skill（Skill，可复用任务能力/固定招式）、Sub-agent（Sub-agent，子智能体/负责某个子任务的小助手）、MCP（Model Context Protocol，模型上下文协议/让 AI 连接外部工具和资料的标准）和 Automation（Automation，自动化任务/按规则自动执行的重复任务）。</p>
+        </article>
       </div>
     </section>
 
@@ -676,6 +682,10 @@
           <tr><td>RAG（Retrieval-Augmented Generation，检索增强生成/先检索资料再生成答案）</td><td>让 AI 先读资料，再回答问题</td></tr>
           <tr><td>Tool Use（Tool Use，工具使用）</td><td>让 Codex（Codex，AI 编程助手）读写文件、打开网页、运行检查</td></tr>
           <tr><td>Agent（Agent，智能体/能计划并使用工具完成任务的 AI 系统）</td><td>用计划、执行、验证、复盘完成小任务</td></tr>
+          <tr><td>Skill（Skill，可复用任务能力/固定招式）</td><td>把反复有用的提示词、步骤和检查表沉淀成固定工作流</td></tr>
+          <tr><td>Sub-agent（Sub-agent，子智能体/负责某个子任务的小助手）</td><td>把检查、测试、文案、界面等子任务分给不同 AI 角色</td></tr>
+          <tr><td>MCP（Model Context Protocol，模型上下文协议/让 AI 连接外部工具和资料的标准）</td><td>用“工具插座”的比喻理解 AI 如何接入浏览器、文档、设计稿等外部能力</td></tr>
+          <tr><td>Automation（Automation，自动化任务/按规则自动执行的重复任务）</td><td>把重复检查变成定时或触发式任务，但先强调安全和人工确认</td></tr>
           <tr><td>Evaluation（Evaluation，评估）与 Safety（Safety，安全）</td><td>用评分表检查正确性、可用性、隐私风险</td></tr>
           <tr><td>Project（Project，项目制学习）</td><td>做学习生活小工具合集并展示</td></tr>
         </tbody>
@@ -717,18 +727,18 @@
         <article class="lesson"><div><h3>RAG 与资料问答</h3><p>用 Codex（Codex，AI 编程助手）制作基于资料回答的问答卡，理解 Retrieval（Retrieval，检索）和 Grounding（Grounding，基于资料回答）。产出：资料问答器原型。</p></div><span class="tag">资料能力</span></article>
         <article class="lesson"><div><h3>Embedding 与相似内容</h3><p>用 Codex（Codex，AI 编程助手）设计错题分类标签，理解 Similarity（Similarity，相似度）和 Vector Database（Vector Database，向量数据库）。产出：错题分类器设计稿。</p></div><span class="tag">分类与检索</span></article>
         <article class="lesson"><div><h3>Tool Use 与文件协作</h3><p>理解 File System（File System，文件系统）和 Browser Preview（Browser Preview，浏览器预览）。产出：小工具合集项目文件夹。</p></div><span class="tag">项目结构</span></article>
-        <article class="lesson"><div><h3>Agent</h3><p>理解 Planning（Planning，规划）、Memory（Memory，记忆）、Verification（Verification，验证）。产出：周末作息规划器和 Agent 任务卡。</p></div><span class="tag">Agent 思维</span></article>
-        <article class="lesson"><div><h3>AGENTS.md 与项目规范</h3><p>学习 Convention（Convention，约定）和 Review（Review，检查修改）。产出：学生版 AGENTS.md（项目规则文件）。</p></div><span class="tag">长期规则</span></article>
-        <article class="lesson"><div><h3>总项目 1：学习生活小工具合集设计</h3><p>用 Codex（Codex，AI 编程助手）规划合集首页，理解 Product Thinking（Product Thinking，产品思维）、MVP（Minimum Viable Product，最小可用版本）、User Story（User Story，用户故事）。产出：总项目需求文档。</p></div><span class="tag">项目设计</span></article>
-        <article class="lesson"><div><h3>总项目 2：集成、测试与改进</h3><p>用 Codex（Codex，AI 编程助手）集成多个工具，理解 Integration（Integration，集成）、Regression（Regression，回归问题）、Usability（Usability，可用性）。产出：小工具合集 beta 版（测试版）。</p></div><span class="tag">项目集成</span></article>
-        <article class="lesson"><div><h3>总项目 3：展示、评估与下一步</h3><p>用 Codex（Codex，AI 编程助手）生成展示稿草案，再改成自己的表达，理解 Demo（Demo，演示）、Reflection（Reflection，复盘）、Responsible AI（Responsible Artificial Intelligence，负责任人工智能）。产出：最终版和 3 分钟展示稿。</p></div><span class="tag">展示复盘</span></article>
+        <article class="lesson"><div><h3>Agent</h3><p>理解 Planning（Planning，规划）、Memory（Memory，记忆）、Verification（Verification，验证）和 MCP（Model Context Protocol，模型上下文协议/让 AI 连接外部工具和资料的标准）。产出：周末作息规划器和 Agent 任务卡。</p></div><span class="tag">Agent 思维</span></article>
+        <article class="lesson"><div><h3>AGENTS.md 与项目规则</h3><p>学习 Convention（Convention，约定）、Rule（Rule，规则）和 Review（Review，检查修改）。产出：学生版 AGENTS.md（项目规则文件）。</p></div><span class="tag">长期规则</span></article>
+        <article class="lesson"><div><h3>Skill 与总项目设计</h3><p>用 Codex（Codex，AI 编程助手）规划合集首页，理解 Skill（Skill，可复用任务能力/固定招式）、Product Thinking（Product Thinking，产品思维）、MVP（Minimum Viable Product，最小可用版本）、User Story（User Story，用户故事）。产出：总项目需求文档和工具设计 Skill 卡。</p></div><span class="tag">项目设计</span></article>
+        <article class="lesson"><div><h3>Sub-agent 与集成测试</h3><p>用 Codex（Codex，AI 编程助手）集成多个工具，并模拟界面检查员、功能测试员、文案修改员 3 个 Sub-agent（Sub-agent，子智能体/负责某个子任务的小助手）。理解 Automation（Automation，自动化任务/按规则自动执行的重复任务）、Integration（Integration，集成）、Regression（Regression，回归问题）、Usability（Usability，可用性）。产出：小工具合集 beta 版、测试清单和角色分工表。</p></div><span class="tag">项目集成</span></article>
+        <article class="lesson"><div><h3>展示、评估与下一步</h3><p>用 Codex（Codex，AI 编程助手）生成展示稿草案，再改成自己的表达，讲清如何使用规则、Skill（Skill，可复用任务能力）、Sub-agent（Sub-agent，子智能体）思路和人工判断。理解 Demo（Demo，演示）、Reflection（Reflection，复盘）、Responsible AI（Responsible Artificial Intelligence，负责任人工智能）。产出：最终版和 3 分钟展示稿。</p></div><span class="tag">展示复盘</span></article>
       </div>
     </section>
 
     <section id="project">
       <div class="project">
         <h2>总项目：学习生活小工具合集</h2>
-        <p>基于 Codex（Codex，能读写代码和运行检查的 AI 编程助手），完成一个包含首页和至少 3 个小工具的项目。推荐工具包括英语单词翻牌卡、数学错题分类器、周末作息规划器、资料问答器、零花钱预算器。</p>
+        <p>基于 Codex（Codex，能读写代码和运行检查的 AI 编程助手），完成一个包含首页和至少 3 个小工具的项目。除了可用页面，还要沉淀 AGENTS.md（给 Codex 的项目规则文件）、工具设计 Skill（Skill，可复用任务能力/固定招式）、Sub-agent（Sub-agent，子智能体/负责某个子任务的小助手）分工表和测试清单。推荐工具包括英语单词翻牌卡、数学错题分类器、周末作息规划器、资料问答器、零花钱预算器。</p>
       </div>
       <table style="margin-top: 18px;">
         <thead><tr><th>评价维度</th><th>说明</th></tr></thead>
@@ -738,6 +748,10 @@
           <tr><td>Prompt（Prompt，提示词）质量</td><td>能表达目标、背景、限制、完成标准</td></tr>
           <tr><td>Evaluation（Evaluation，评估）能力</td><td>能检查 AI（Artificial Intelligence，人工智能）输出，不盲信</td></tr>
           <tr><td>Agent（Agent，智能体/能计划并使用工具完成任务的 AI 系统）思维</td><td>能把任务拆成步骤并验证</td></tr>
+          <tr><td>Skill（Skill，可复用任务能力）沉淀</td><td>能把好用的步骤整理成下次可复用的固定招式</td></tr>
+          <tr><td>Sub-agent（Sub-agent，子智能体）分工</td><td>能把复杂检查拆给不同角色，并汇总结论</td></tr>
+          <tr><td>MCP（Model Context Protocol，模型上下文协议）直觉</td><td>能理解 AI 连接外部工具和资料需要明确接口与权限</td></tr>
+          <tr><td>Automation（Automation，自动化任务）意识</td><td>能分辨重复检查适合自动化，但危险操作必须人工确认</td></tr>
           <tr><td>Safety（Safety，安全）意识</td><td>不输入隐私，不运行危险操作</td></tr>
           <tr><td>展示表达</td><td>能讲清过程、收获和下一步</td></tr>
         </tbody>
@@ -762,6 +776,8 @@
 lesson-02-llm-intuition.html
 lesson-03-prompt-context.html
 ...
+lesson-14-skill-project-design.html
+lesson-15-subagent-integration-test.html
 lesson-16-demo-reflection.html</code></pre>
     </section>
 
@@ -790,6 +806,10 @@ lesson-16-demo-reflection.html</code></pre>
           <li><a href="https://developers.openai.com/codex/overview">OpenAI Codex overview</a>：参考 Codex（Codex，AI 编程助手）可以写代码、理解代码、Review（Review，检查修改）、Debug（Debug，调试）和自动化开发任务的定位。</li>
           <li><a href="https://developers.openai.com/codex/learn/best-practices">OpenAI Codex best practices</a>：参考 Goal（Goal，目标）、Context（Context，上下文）、Constraints（Constraints，限制）、Done when（Done when，完成标准）的任务表达结构。</li>
           <li><a href="https://developers.openai.com/codex/guides/agents-md">OpenAI AGENTS.md guide</a>：参考 AGENTS.md（给 Codex 的项目规则文件）作为项目长期规则的做法。</li>
+          <li><a href="https://developers.openai.com/codex/skills">OpenAI Agent Skills</a>：参考 Skill（Skill，可复用任务能力/固定招式）把说明、资料和脚本打包成可复用工作流的设计，用来刷新第 14 课。</li>
+          <li><a href="https://developers.openai.com/codex/mcp">OpenAI Model Context Protocol</a>：参考 MCP（Model Context Protocol，模型上下文协议/让 AI 连接外部工具和资料的标准）连接工具和上下文的定位，用来刷新第 12 课。</li>
+          <li><a href="https://developers.openai.com/codex/subagents">OpenAI Subagents</a>：参考 Sub-agent（Sub-agent，子智能体/负责某个子任务的小助手）并行探索、测试和总结的工作方式，用来刷新第 15 课。</li>
+          <li><a href="https://developers.openai.com/codex/app/automations">OpenAI Automations</a>：参考 Automation（Automation，自动化任务/按规则自动执行的重复任务）可结合 Skill（Skill，可复用任务能力）执行周期性检查的做法，用来刷新第 15 课并强调安全边界。</li>
         </ul>
       </div>
     </section>
