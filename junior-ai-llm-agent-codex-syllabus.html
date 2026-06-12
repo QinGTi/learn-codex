@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>初一 AI / LLM / Agent / Codex 系统课教学大纲</title>
+  <style>
+    :root {
+      --green: #00b14f;
+      --deep: #006f3a;
+      --mint: #e7faef;
+      --pale: #f7fff9;
+      --ink: #102018;
+      --muted: #5c7065;
+      --line: #dbece2;
+      --card: #ffffff;
+      --teal: #00a8a8;
+      --lime: #b7f34b;
+      --yellow: #ffd166;
+      --pink: #ff7aa2;
+      --shadow: 0 18px 44px rgba(0, 111, 58, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 4%, rgba(0, 177, 79, 0.16), transparent 25rem),
+        radial-gradient(circle at 88% 8%, rgba(0, 168, 168, 0.12), transparent 24rem),
+        linear-gradient(180deg, #fbfffc 0%, #ffffff 34%, #f4fbf7 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.72;
+    }
+
+    a { color: var(--deep); text-underline-offset: 0.22em; }
+
+    .wrap {
+      width: min(1160px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 40px;
+      align-items: center;
+      padding: 46px 0 26px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--deep);
+      font-weight: 900;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(0, 177, 79, 0.13);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 860px;
+      font-size: clamp(40px, 6.5vw, 78px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 760px;
+      margin: 24px 0 28px;
+      color: #31483b;
+      font-size: 20px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 16px;
+      border: 1px solid rgba(0, 177, 79, 0.16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 8px 22px rgba(0, 111, 58, 0.06);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1.1;
+      color: var(--deep);
+    }
+
+    .map {
+      position: relative;
+      min-height: 540px;
+      padding: 24px;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .map::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 177, 79, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 177, 79, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, #000, transparent 84%);
+    }
+
+    .path {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 11px;
+    }
+
+    .path div {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(16, 32, 24, 0.05);
+    }
+
+    .path span {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-size: 14px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin-bottom: 42px;
+      padding: 12px 18px;
+      border-block: 1px solid rgba(0, 177, 79, 0.12);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(18px);
+    }
+
+    .toc {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .toc a {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 177, 79, 0.16);
+      background: var(--pale);
+      color: #244332;
+      font-size: 14px;
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    section { padding: 40px 0; }
+
+    .head {
+      max-width: 850px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 26px 0 10px;
+      font-size: 22px;
+      line-height: 1.3;
+    }
+
+    p { margin: 0 0 14px; }
+    .muted { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card {
+      min-height: 100%;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: 0 10px 28px rgba(16, 32, 24, 0.05);
+    }
+
+    .card.highlight {
+      border-left: 6px solid var(--green);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(16, 32, 24, 0.04);
+    }
+
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--mint);
+      color: #123f26;
+      font-size: 14px;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .lesson-list {
+      display: grid;
+      gap: 14px;
+      counter-reset: lesson;
+    }
+
+    .lesson {
+      counter-increment: lesson;
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr) minmax(210px, 0.45fr);
+      gap: 16px;
+      align-items: start;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(16, 32, 24, 0.045);
+    }
+
+    .lesson::before {
+      content: counter(lesson);
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-weight: 950;
+      box-shadow: 0 8px 18px rgba(0, 177, 79, 0.22);
+    }
+
+    .lesson h3 { margin-top: 0; }
+
+    .tag {
+      display: inline-flex;
+      width: fit-content;
+      min-height: 30px;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      color: var(--deep);
+      background: var(--pale);
+      border: 1px solid rgba(0, 177, 79, 0.2);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    pre {
+      margin: 16px 0 0;
+      padding: 18px;
+      overflow-x: auto;
+      border-radius: 8px;
+      background: #102018;
+      color: #dff8ea;
+      line-height: 1.55;
+    }
+
+    .project {
+      padding: 26px;
+      border-radius: 12px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--teal));
+      box-shadow: var(--shadow);
+    }
+
+    .sources {
+      margin-bottom: 52px;
+      padding: 24px;
+      border-radius: 12px;
+      color: #f1fff6;
+      background: #102018;
+    }
+
+    .sources a { color: var(--lime); }
+    .sources li { margin-bottom: 9px; }
+    .source-note {
+      margin: 7px 0 14px;
+      padding-left: 14px;
+      border-left: 3px solid rgba(183, 243, 75, 0.48);
+      color: #d8f5e2;
+      font-size: 15px;
+    }
+
+    @page {
+      size: A4;
+      margin: 16mm 14mm 18mm;
+    }
+
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      html { scroll-behavior: auto; }
+
+      body {
+        overflow: visible;
+        background: #ffffff;
+        color: #102018;
+        font-size: 11.2pt;
+        line-height: 1.62;
+      }
+
+      nav { display: none; }
+
+      .wrap {
+        width: auto;
+        margin: 0;
+      }
+
+      .hero {
+        min-height: 0;
+        display: block;
+        padding: 0 0 12mm;
+        break-after: avoid-page;
+      }
+
+      .eyebrow {
+        margin-bottom: 8mm;
+        font-size: 11pt;
+      }
+
+      .dot {
+        width: 9px;
+        height: 9px;
+        box-shadow: 0 0 0 5px rgba(0, 177, 79, 0.13);
+      }
+
+      h1 {
+        max-width: none;
+        font-size: 30pt;
+        line-height: 1.16;
+      }
+
+      .lede {
+        max-width: none;
+        margin: 6mm 0 7mm;
+        font-size: 12pt;
+      }
+
+      .hero-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
+        margin-bottom: 7mm;
+      }
+
+      .stat {
+        padding: 9px 10px;
+        box-shadow: none;
+      }
+
+      .stat strong { font-size: 17pt; }
+
+      .map {
+        min-height: 0;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: none;
+        overflow: visible;
+      }
+
+      .map::before { display: none; }
+
+      .path {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .path div {
+        min-height: 0;
+        padding: 8px 10px;
+        box-shadow: none;
+        font-size: 9.5pt;
+      }
+
+      .path span {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+      }
+
+      section {
+        padding: 8mm 0 0;
+        break-before: auto;
+      }
+
+      section + section {
+        border-top: 1px solid var(--line);
+        margin-top: 8mm;
+      }
+
+      .head {
+        max-width: none;
+        margin-bottom: 4mm;
+      }
+
+      h2 {
+        margin: 0 0 3mm;
+        font-size: 20pt;
+        line-height: 1.2;
+      }
+
+      h3 {
+        margin: 4mm 0 2mm;
+        font-size: 13.5pt;
+        line-height: 1.28;
+      }
+
+      p { margin-bottom: 3mm; }
+
+      .grid {
+        display: block;
+      }
+
+      .card {
+        min-height: 0;
+        margin-bottom: 4mm;
+        padding: 12px 14px;
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      table {
+        box-shadow: none;
+        page-break-inside: auto;
+      }
+
+      thead {
+        display: table-header-group;
+      }
+
+      tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      th, td {
+        padding: 8px 9px;
+        font-size: 9.8pt;
+      }
+
+      .lesson-list {
+        display: block;
+        counter-reset: lesson;
+      }
+
+      .lesson {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 9px;
+        margin-bottom: 4mm;
+        padding: 11px 12px;
+        box-shadow: none;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .lesson::before {
+        width: 28px;
+        height: 28px;
+        box-shadow: none;
+        font-size: 10.5pt;
+      }
+
+      .lesson h3 {
+        margin: 0 0 1.5mm;
+        font-size: 13pt;
+      }
+
+      .lesson p {
+        margin-bottom: 2mm;
+      }
+
+      .lesson .tag {
+        grid-column: 2;
+        min-height: 0;
+        padding: 2px 8px;
+        font-size: 9pt;
+      }
+
+      pre {
+        padding: 11px 12px;
+        white-space: pre-wrap;
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .project {
+        padding: 14px 16px;
+        color: #102018;
+        background: var(--mint);
+        border: 1px solid var(--line);
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .sources {
+        margin-bottom: 0;
+        padding: 14px 16px;
+        color: #102018;
+        background: #ffffff;
+        border: 1px solid var(--line);
+      }
+
+      .sources a { color: var(--deep); }
+
+      .sources li {
+        margin-bottom: 3.5mm;
+        break-inside: avoid;
+      }
+
+      .source-note {
+        margin: 1.5mm 0 0;
+        color: #31483b;
+        border-left-color: rgba(0, 177, 79, 0.45);
+        font-size: 9.6pt;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .two, .three { grid-template-columns: 1fr; }
+      .lesson { grid-template-columns: 46px minmax(0, 1fr); }
+      .lesson .tag { grid-column: 2; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 24px, 1160px); }
+      .hero { padding-top: 28px; }
+      .lede { font-size: 17px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .map { min-height: auto; padding: 16px; }
+      th, td { padding: 11px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> 16 节系统课 · 理论与实践结合</div>
+      <h1>初一 AI / LLM / Agent / Codex 教学大纲</h1>
+      <p class="lede">参考国外顶级大学 AI（Artificial Intelligence，人工智能）、LLM（Large Language Model，大语言模型）、Agent（Agent，智能体）入门课程路线，所有 demo 都基于 Codex（Codex，能写代码、读项目、调试和运行检查的 AI 编程助手）展开，用初一可理解的解释和小工具项目完成降维实践。</p>
+      <div class="hero-grid">
+        <div class="stat"><strong>16 节</strong><span>每节 1 小时</span></div>
+        <div class="stat"><strong>4 模块</strong><span>基础、Codex、Agent、项目</span></div>
+        <div class="stat"><strong>3+ 工具</strong><span>学习生活小工具合集</span></div>
+        <div class="stat"><strong>Codex 贯穿</strong><span>老师示范，学生模仿</span></div>
+      </div>
+    </div>
+    <aside class="map" aria-label="学习路线">
+      <div class="path">
+        <div><span>1</span> AI（Artificial Intelligence，人工智能）基础问题</div>
+        <div><span>2</span> LLM（Large Language Model，大语言模型）直觉</div>
+        <div><span>3</span> Prompt（Prompt，提示词）与 Context（Context，上下文）</div>
+        <div><span>4</span> Evaluation（Evaluation，评估）与 Safety（Safety，安全）</div>
+        <div><span>5</span> Codex（Codex，AI 编程助手）实战</div>
+        <div><span>6</span> RAG（Retrieval-Augmented Generation，检索增强生成/先检索资料再生成答案）</div>
+        <div><span>7</span> Agent（Agent，智能体/会计划并用工具的 AI 系统）</div>
+        <div><span>8</span> Project（Project，项目制学习）展示</div>
+      </div>
+    </aside>
+  </header>
+
+  <nav>
+    <div class="toc">
+      <a href="#principles">设计原则</a>
+      <a href="#route">学习路线</a>
+      <a href="#structure">课堂结构</a>
+      <a href="#lessons">16 节课</a>
+      <a href="#project">总项目</a>
+      <a href="#teacher">备课建议</a>
+      <a href="#sources">参考资料</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section id="principles">
+      <div class="head">
+        <h2>课程设计原则</h2>
+        <p class="muted">这套课保留大学路线，但把公式、论文和复杂工程替换为演示、模仿、小工具和复盘。</p>
+      </div>
+      <div class="grid three">
+        <article class="card highlight">
+          <h3>概念保留</h3>
+          <p>保留 LLM（Large Language Model，大语言模型）、RAG（Retrieval-Augmented Generation，检索增强生成/先检索资料再生成答案）、Agent（Agent，智能体/能计划并使用工具完成任务的 AI 系统）等概念名，每次出现都带括号解释。</p>
+        </article>
+        <article class="card highlight">
+          <h3>实践驱动</h3>
+          <p>每节课都用 Codex（Codex，AI 编程助手）完成一个可见结果：提示词卡、单词卡、错题卡、资料问答器、作息规划器或总项目页面。</p>
+        </article>
+        <article class="card highlight">
+          <h3>Codex 贯穿</h3>
+          <p>所有 demo 都基于 Codex（Codex，能写代码、读项目、调试和运行检查的 AI 编程助手），重点训练目标、上下文、限制、完成标准、验证和迭代。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="route">
+      <div class="head">
+        <h2>总体学习路线</h2>
+      </div>
+      <table>
+        <thead><tr><th>大学课程路线</th><th>初一课程转译</th></tr></thead>
+        <tbody>
+          <tr><td>AI（Artificial Intelligence，人工智能）基础问题</td><td>用生活任务理解搜索、分类、优化</td></tr>
+          <tr><td>LLM（Large Language Model，大语言模型）原理</td><td>用补全文字、猜下一个词理解模型行为</td></tr>
+          <tr><td>Prompt（Prompt，提示词）与 Context（Context，上下文）</td><td>用目标、背景、限制、完成标准训练表达</td></tr>
+          <tr><td>RAG（Retrieval-Augmented Generation，检索增强生成/先检索资料再生成答案）</td><td>让 AI 先读资料，再回答问题</td></tr>
+          <tr><td>Tool Use（Tool Use，工具使用）</td><td>让 Codex（Codex，AI 编程助手）读写文件、打开网页、运行检查</td></tr>
+          <tr><td>Agent（Agent，智能体/能计划并使用工具完成任务的 AI 系统）</td><td>用计划、执行、验证、复盘完成小任务</td></tr>
+          <tr><td>Evaluation（Evaluation，评估）与 Safety（Safety，安全）</td><td>用评分表检查正确性、可用性、隐私风险</td></tr>
+          <tr><td>Project（Project，项目制学习）</td><td>做学习生活小工具合集并展示</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="structure">
+      <div class="head">
+        <h2>每节课固定结构</h2>
+      </div>
+      <div class="grid five">
+        <table>
+          <thead><tr><th>时间</th><th>环节</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>0-10 分钟</td><td>理论引入</td><td>讲 1-2 个核心概念，每个概念有括号解释</td></tr>
+            <tr><td>10-20 分钟</td><td>Codex demo</td><td>老师用 Codex（Codex，AI 编程助手）完整演示一遍</td></tr>
+            <tr><td>20-50 分钟</td><td>学生模仿实践</td><td>学生本地模仿，老师提醒如何表达目标和检查结果</td></tr>
+            <tr><td>50-55 分钟</td><td>验证与修正</td><td>打开网页、检查按钮、读输出、找问题</td></tr>
+            <tr><td>55-60 分钟</td><td>复盘</td><td>回答“我今天让 AI 做了什么？哪里需要我判断？”</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="lessons">
+      <div class="head">
+        <h2>16 节课大纲</h2>
+        <p class="muted">前 12 节建立概念和小工具能力，后 4 节完成基于 Codex（Codex，AI 编程助手）的学习生活小工具合集。</p>
+      </div>
+      <div class="lesson-list">
+        <article class="lesson"><div><h3>AI 不是魔法</h3><p>用 Codex（Codex，AI 编程助手）把学习生活问题拆成计划，理解 AI（Artificial Intelligence，人工智能）、Search（Search，搜索）、Classification（Classification，分类）、Optimization（Optimization，优化）。产出：AI 使用安全约定卡。</p></div><span class="tag">安全与问题拆解</span></article>
+        <article class="lesson"><div><h3>LLM 如何“接话”</h3><p>用 Codex（Codex，AI 编程助手）做接话小游戏，理解 LLM（Large Language Model，大语言模型）、Token（Token，模型处理文字的小片段）、Training（Training，训练）、Inference（Inference，推理/生成）。产出：LLM 解释卡。</p></div><span class="tag">模型直觉</span></article>
+        <article class="lesson"><div><h3>Prompt 与 Context</h3><p>在 Codex（Codex，AI 编程助手）里对比好坏 Prompt（Prompt，提示词），学习目标、背景、限制、完成标准。产出：学生版 Prompt 模板。</p></div><span class="tag">表达训练</span></article>
+        <article class="lesson"><div><h3>Hallucination 与 Evaluation</h3><p>用 Codex（Codex，AI 编程助手）生成可检查的回答，训练检查 AI（Artificial Intelligence，人工智能）输出的方法。产出：AI 回答检查表。</p></div><span class="tag">判断力</span></article>
+        <article class="lesson"><div><h3>Codex 与 Vibe Coding</h3><p>认识 HTML（HyperText Markup Language，网页结构语言）和 Codex（Codex，AI 编程助手）。产出：个人兴趣主页。</p></div><span class="tag">第一个网页</span></article>
+        <article class="lesson"><div><h3>CSS 与 UI</h3><p>用 Codex（Codex，AI 编程助手）迭代页面风格，学习颜色、布局、字号、间距和 Iteration（Iteration，迭代）。产出：个人主页第二版。</p></div><span class="tag">界面表达</span></article>
+        <article class="lesson"><div><h3>JavaScript 与单词翻牌卡</h3><p>理解 Event（Event，事件）和 State（State，状态）。产出：英语单词翻牌卡。</p></div><span class="tag">交互入门</span></article>
+        <article class="lesson"><div><h3>Debug 与 Test</h3><p>学习 Reproduce（Reproduce，复现）和 bug 报告（错误报告）。产出：修复版单词卡。</p></div><span class="tag">验证习惯</span></article>
+        <article class="lesson"><div><h3>RAG 与资料问答</h3><p>用 Codex（Codex，AI 编程助手）制作基于资料回答的问答卡，理解 Retrieval（Retrieval，检索）和 Grounding（Grounding，基于资料回答）。产出：资料问答器原型。</p></div><span class="tag">资料能力</span></article>
+        <article class="lesson"><div><h3>Embedding 与相似内容</h3><p>用 Codex（Codex，AI 编程助手）设计错题分类标签，理解 Similarity（Similarity，相似度）和 Vector Database（Vector Database，向量数据库）。产出：错题分类器设计稿。</p></div><span class="tag">分类与检索</span></article>
+        <article class="lesson"><div><h3>Tool Use 与文件协作</h3><p>理解 File System（File System，文件系统）和 Browser Preview（Browser Preview，浏览器预览）。产出：小工具合集项目文件夹。</p></div><span class="tag">项目结构</span></article>
+        <article class="lesson"><div><h3>Agent</h3><p>理解 Planning（Planning，规划）、Memory（Memory，记忆）、Verification（Verification，验证）。产出：周末作息规划器和 Agent 任务卡。</p></div><span class="tag">Agent 思维</span></article>
+        <article class="lesson"><div><h3>AGENTS.md 与项目规范</h3><p>学习 Convention（Convention，约定）和 Review（Review，检查修改）。产出：学生版 AGENTS.md（项目规则文件）。</p></div><span class="tag">长期规则</span></article>
+        <article class="lesson"><div><h3>总项目 1：学习生活小工具合集设计</h3><p>用 Codex（Codex，AI 编程助手）规划合集首页，理解 Product Thinking（Product Thinking，产品思维）、MVP（Minimum Viable Product，最小可用版本）、User Story（User Story，用户故事）。产出：总项目需求文档。</p></div><span class="tag">项目设计</span></article>
+        <article class="lesson"><div><h3>总项目 2：集成、测试与改进</h3><p>用 Codex（Codex，AI 编程助手）集成多个工具，理解 Integration（Integration，集成）、Regression（Regression，回归问题）、Usability（Usability，可用性）。产出：小工具合集 beta 版（测试版）。</p></div><span class="tag">项目集成</span></article>
+        <article class="lesson"><div><h3>总项目 3：展示、评估与下一步</h3><p>用 Codex（Codex，AI 编程助手）生成展示稿草案，再改成自己的表达，理解 Demo（Demo，演示）、Reflection（Reflection，复盘）、Responsible AI（Responsible Artificial Intelligence，负责任人工智能）。产出：最终版和 3 分钟展示稿。</p></div><span class="tag">展示复盘</span></article>
+      </div>
+    </section>
+
+    <section id="project">
+      <div class="project">
+        <h2>总项目：学习生活小工具合集</h2>
+        <p>基于 Codex（Codex，能读写代码和运行检查的 AI 编程助手），完成一个包含首页和至少 3 个小工具的项目。推荐工具包括英语单词翻牌卡、数学错题分类器、周末作息规划器、资料问答器、零花钱预算器。</p>
+      </div>
+      <table style="margin-top: 18px;">
+        <thead><tr><th>评价维度</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>目标清楚</td><td>能说清工具解决什么问题</td></tr>
+          <tr><td>功能可用</td><td>小工具能打开、能操作、能看到结果</td></tr>
+          <tr><td>Prompt（Prompt，提示词）质量</td><td>能表达目标、背景、限制、完成标准</td></tr>
+          <tr><td>Evaluation（Evaluation，评估）能力</td><td>能检查 AI（Artificial Intelligence，人工智能）输出，不盲信</td></tr>
+          <tr><td>Agent（Agent，智能体/能计划并使用工具完成任务的 AI 系统）思维</td><td>能把任务拆成步骤并验证</td></tr>
+          <tr><td>Safety（Safety，安全）意识</td><td>不输入隐私，不运行危险操作</td></tr>
+          <tr><td>展示表达</td><td>能讲清过程、收获和下一步</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="teacher">
+      <div class="head">
+        <h2>老师备课建议</h2>
+      </div>
+      <div class="grid two">
+        <article class="card">
+          <h3>课件统一结构</h3>
+          <p>本课问题、本课概念、老师演示 Prompt（Prompt，提示词）、学生模仿任务、验收清单、复盘问题。</p>
+        </article>
+        <article class="card">
+          <h3>课堂话术</h3>
+          <p>“今天不是背代码，而是学习如何把想法说清楚。” “Codex（Codex，AI 编程助手）可以帮我们做事，但我们负责判断。”</p>
+        </article>
+      </div>
+      <pre><code>lesson-01-ai-basics.html
+lesson-02-llm-intuition.html
+lesson-03-prompt-context.html
+...
+lesson-16-demo-reflection.html</code></pre>
+    </section>
+
+    <section id="sources">
+      <div class="sources">
+        <h2>参考资料</h2>
+        <h3>大学课程参考</h3>
+        <ul>
+          <li><a href="https://stanford-cs324.github.io/winter2022/">Stanford CS324: Large Language Models</a>：斯坦福大学《大语言模型》课程。<div class="source-note">这门课系统讨论语言模型的能力、局限、风险、法律和社会影响。本课程借鉴它的整体视角，把第 1-4 课设计成 LLM（Large Language Model，大语言模型）基础直觉、Hallucination（Hallucination，幻觉）和 Evaluation（Evaluation，评估）意识。</div></li>
+          <li><a href="https://web.stanford.edu/class/cs25/">Stanford CS25: Transformers United</a>：斯坦福大学《Transformer 专题》课程。<div class="source-note">这门课围绕 Transformer（Transformer，现代大语言模型常用的神经网络结构）在语言、视觉、代码等领域的应用展开。本课程借鉴它对 Token（Token，模型处理文字的小片段）、上下文和模型结构直觉的重视。</div></li>
+          <li><a href="https://rdi.berkeley.edu/llm-agents/f24">UC Berkeley Large Language Model Agents</a>：加州大学伯克利分校《大语言模型智能体》课程。<div class="source-note">这门课从 LLM（Large Language Model，大语言模型）能力出发，继续讨论 Agent（Agent，智能体）、工具使用、代码生成、网页自动化和复杂任务执行。本课程借鉴它的路线，把 Codex 放进计划、行动、验证、复盘的 Agent 思维中。</div></li>
+          <li><a href="https://rdi.berkeley.edu/understanding_llms/s24">UC Berkeley Understanding Large Language Models</a>：加州大学伯克利分校《理解大语言模型》课程。<div class="source-note">这门课关注 LLM（Large Language Model，大语言模型）的上下文、能力边界、训练方法和评估。本课程借鉴它的概念顺序，把 Prompt（Prompt，提示词）、Context（Context，上下文）和 Evaluation（Evaluation，评估）设计成反复练习的表达和判断能力。</div></li>
+          <li><a href="https://rdi.berkeley.edu/agentic-ai/f25">UC Berkeley Agentic AI</a>：加州大学伯克利分校《智能体式人工智能》课程。<div class="source-note">这门课关注 Agentic AI（Agentic Artificial Intelligence，具备行动和工具使用能力的人工智能）如何规划、调用工具和完成任务。本课程借鉴它的行动型 AI 视角，让学生通过 Codex demo 理解 Agent 不是只聊天，而是能分步骤做事。</div></li>
+          <li><a href="https://cmu-llms.org/">CMU Large Language Models</a>：卡内基梅隆大学《大语言模型》课程。<div class="source-note">这门课覆盖模型基础、应用、训练、评估和可靠性。本课程借鉴它的完整技术版图，但把复杂数学和工程实现降维成 RAG（Retrieval-Augmented Generation，检索增强生成）、资料问答、测试清单和学习小工具。</div></li>
+          <li><a href="https://introtodeeplearning.com/">MIT 6.S191 Introduction to Deep Learning</a>：麻省理工学院《深度学习导论》课程。<div class="source-note">这门课强调短时间讲清核心概念，并配合实验实践。本课程借鉴它的节奏，把每节 1 小时拆成理论引入、Codex demo、学生模仿、验证和复盘。</div></li>
+          <li><a href="https://cs50.harvard.edu/ai/">Harvard CS50 AI with Python</a>：哈佛大学《基于 Python 的人工智能》课程。<div class="source-note">这门课把搜索、知识、推理、机器学习等 AI（Artificial Intelligence，人工智能）概念放进可完成的编程项目。本课程借鉴它的项目制思路，让学生每节课都有可见产出，并最终完成学习生活小工具合集。</div></li>
+          <li><a href="https://sites.harvard.edu/harvard-seas-llm/">Harvard SEAS Large Language Models</a>：哈佛大学工程与应用科学学院《大语言模型》课程。<div class="source-note">这类课程通常同时覆盖 LLM（Large Language Model，大语言模型）的技术原理、应用场景和社会影响。本课程借鉴这种平衡，把能做什么和哪里要小心一起教。</div></li>
+          <li><a href="https://www.cs.princeton.edu/courses/archive/fall22/cos597G/">Princeton COS 597G Understanding Large Language Models</a>：普林斯顿大学《理解大语言模型》课程。<div class="source-note">这门课强调阅读、讨论、展示和对模型行为的深入理解。本课程借鉴它的表达与复盘方式，把第 16 课设计成 Demo（Demo，演示）、Reflection（Reflection，复盘）和下一步改进。</div></li>
+          <li><a href="https://ep.jhu.edu/courses/705651-large-language-models-theory-and-practice/">Johns Hopkins LLM Theory and Practice</a>：约翰斯·霍普金斯大学《大语言模型：理论与实践》课程。<div class="source-note">这门课的定位是把理论理解和实践应用结合起来。本课程借鉴它的定位，保证学生不是只学会叫 AI 干活，也能理解 Token（Token，模型处理文字的小片段）、Inference（Inference，推理/生成）、RAG（Retrieval-Augmented Generation，检索增强生成）等基础概念。</div></li>
+          <li><a href="https://watspeed.uwaterloo.ca/programs-and-courses/course-foundations-of-llms.html">University of Waterloo Foundations of LLMs</a>：滑铁卢大学《大语言模型基础》课程。<div class="source-note">这门课强调 LLM（Large Language Model，大语言模型）的基础概念和应用理解。本课程借鉴它的基础路线，把大学里的专业内容压缩成适合初一学生的直觉。</div></li>
+          <li><a href="https://rycolab.io/classes/llm-s24/">ETH Zurich / Rycolab Large Language Models</a>：苏黎世联邦理工学院 / Rycolab《大语言模型》课程。<div class="source-note">这门课系统覆盖语言模型的训练、推理、对齐和评估。本课程借鉴它的结构，把 Training（Training，训练）、Inference（Inference，推理/生成）和 Evaluation（Evaluation，评估）保留下来，但用类比和小工具实践解释。</div></li>
+          <li><a href="https://www.ece.uw.edu/academics/professional-masters-short-courses/llm/">University of Washington Hands-on Master Class on LLMs and ChatGPT</a>：华盛顿大学《LLM 与 ChatGPT 动手大师课》。<div class="source-note">这门课强调 hands-on（动手实践）和真实工具体验。本课程借鉴它的实践取向，采用老师 Codex demo、学生本地模仿、打开网页验证的课堂节奏。</div></li>
+        </ul>
+        <h3>Codex 官方参考</h3>
+        <ul>
+          <li><a href="https://developers.openai.com/codex/overview">OpenAI Codex overview</a>：参考 Codex（Codex，AI 编程助手）可以写代码、理解代码、Review（Review，检查修改）、Debug（Debug，调试）和自动化开发任务的定位。</li>
+          <li><a href="https://developers.openai.com/codex/learn/best-practices">OpenAI Codex best practices</a>：参考 Goal（Goal，目标）、Context（Context，上下文）、Constraints（Constraints，限制）、Done when（Done when，完成标准）的任务表达结构。</li>
+          <li><a href="https://developers.openai.com/codex/guides/agents-md">OpenAI AGENTS.md guide</a>：参考 AGENTS.md（给 Codex 的项目规则文件）作为项目长期规则的做法。</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
