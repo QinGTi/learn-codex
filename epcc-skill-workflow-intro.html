@@ -714,37 +714,39 @@ https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-a
           <div class="card bad">
             <span class="label">不推荐</span>
             <h3>一句话催 Codex 开工</h3>
-            <div class="prompt">帮我做一个学习工具页面，快点。</div>
-            <p>问题：没有目标、对象、限制、验收标准，也没有要求先理解项目。</p>
+            <div class="prompt">帮我做一个 2048 游戏，直接写代码。</div>
+            <p>问题：没有要求先理解项目，也没有说明玩法、技术选择、测试方式和提交规则。Codex 可能很快动手，但老师和学生不容易判断它做得对不对。</p>
           </div>
           <div class="card good">
             <span class="label">推荐</span>
-            <h3>要求使用 EPCC</h3>
-            <div class="prompt">请使用 EPCC 工作流，为本项目制作一个学生版 HTML 课件。
+            <h3>用 EPCC 做 2048</h3>
+            <div class="prompt">请使用 EPCC 工作流，帮我从空仓库实现第一个网页版 2048 游戏。
 
-目标：介绍一个 Codex 工作流。
-对象：初一学生。
-限制：中文、light mode、Grab 绿、不要改无关文件。
-完成标准：有课程问题、核心概念、Codex demo、学生任务、验收清单、反思问题和参考资料；HTML 能通过基础检查。</div>
+第一步只做 Explore：检查仓库结构、现有规则和限制，写入 EPCC_EXPLORE.md。
+第二步做 Plan：制定开发流程和测试流程，写入 EPCC_PLAN.md。
+第三步做 Code：实现标准 2048，不是 2028；需要棋盘、移动、合并、计分、重开、best score 和移动端控制。
+第四步做 Commit：运行测试，只暂存相关文件，提交到功能分支，并写入 EPCC_COMMIT.md。
+
+完成标准：能在浏览器打开并游玩；核心逻辑有自动化测试；Codex 需要验证页面、说明测试结果，并且不要改无关文件。</div>
           </div>
         </div>
         <div class="grid two">
           <div class="card">
             <span class="label">演示观察点</span>
             <ul class="task-list">
-              <li>Codex 是否先读项目规则</li>
-              <li>是否写出规格和任务清单</li>
-              <li>是否一次只做一个小任务</li>
-              <li>是否运行检查再总结</li>
+              <li>Explore：Codex 是否先发现这是空仓库，并记录限制</li>
+              <li>Plan：是否把开发任务和测试验收拆清楚</li>
+              <li>Code：是否把 2048 逻辑和页面交互分开实现</li>
+              <li>Commit：是否测试通过后，只提交相关文件</li>
             </ul>
           </div>
           <div class="card">
             <span class="label">老师追问</span>
             <ul class="task-list">
-              <li>如果没有 Explore，会漏掉什么？</li>
-              <li>如果没有 Plan，怎么知道做完了？</li>
-              <li>如果没有 Check，怎么发现页面坏了？</li>
-              <li>如果没有 Commit，怎么回到可用版本？</li>
+              <li>如果一开始把 2048 说成 2028，Codex 应该直接猜吗？</li>
+              <li>为什么移动合并规则要写自动化测试？</li>
+              <li>为什么要用浏览器真的点按钮、按方向键检查？</li>
+              <li>为什么提交前要建功能分支，而不是直接提交到 main？</li>
             </ul>
           </div>
         </div>
