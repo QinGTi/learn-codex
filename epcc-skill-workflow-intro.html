@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EPCC Skill 工作流介绍</title>
+  <style>
+    :root {
+      --green: #00b14f;
+      --deep: #006f3a;
+      --dark: #102018;
+      --muted: #5d7166;
+      --line: #d8ebdf;
+      --mint: #e7faef;
+      --pale: #f7fff9;
+      --card: #ffffff;
+      --teal: #00a8a8;
+      --lime: #b7f34b;
+      --yellow: #ffd166;
+      --coral: #ff7a59;
+      --blue: #4b8cff;
+      --shadow: 0 18px 44px rgba(0, 111, 58, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--dark);
+      background:
+        radial-gradient(circle at 8% 4%, rgba(0, 177, 79, 0.15), transparent 24rem),
+        radial-gradient(circle at 88% 5%, rgba(0, 168, 168, 0.13), transparent 24rem),
+        linear-gradient(180deg, #fbfffc 0%, #ffffff 44%, #f3fbf6 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.68;
+    }
+
+    a { color: var(--deep); text-underline-offset: 0.22em; }
+    p { margin: 0 0 14px; }
+    strong { color: #062d19; }
+
+    .wrap {
+      width: min(1160px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .slide {
+      min-height: 100vh;
+      display: grid;
+      align-content: center;
+      padding: 72px 0;
+      border-bottom: 1px solid rgba(0, 177, 79, 0.1);
+    }
+
+    .hero {
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 0.82fr);
+      gap: 40px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--deep);
+      font-weight: 950;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(0, 177, 79, 0.13);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      line-height: 1.28;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 820px;
+      margin: 24px 0 30px;
+      color: #31483b;
+      font-size: clamp(18px, 2.1vw, 23px);
+    }
+
+    .hero-actions,
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      padding: 8px 14px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--deep);
+      font-weight: 900;
+    }
+
+    .board {
+      position: relative;
+      min-height: 560px;
+      padding: 26px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .board::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 177, 79, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 177, 79, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, #000, transparent 82%);
+    }
+
+    .board-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 14px;
+    }
+
+    .phase-mini {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(16, 32, 24, 0.05);
+    }
+
+    .phase-letter {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--green);
+      color: #fff;
+      font-size: 28px;
+      font-weight: 950;
+    }
+
+    .phase-mini b {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--deep);
+      font-size: 18px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 12px 18px;
+      border-block: 1px solid rgba(0, 177, 79, 0.12);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .toc {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .toc a {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border: 1px solid rgba(0, 177, 79, 0.16);
+      border-radius: 8px;
+      background: var(--pale);
+      color: #244332;
+      font-size: 14px;
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      min-height: 100%;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: 0 10px 28px rgba(16, 32, 24, 0.05);
+    }
+
+    .card.accent {
+      border-color: rgba(0, 177, 79, 0.28);
+      background: linear-gradient(180deg, #ffffff 0%, #f7fff9 100%);
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      margin-bottom: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--deep);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      counter-reset: phase;
+    }
+
+    .step {
+      position: relative;
+      min-height: 280px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(16, 32, 24, 0.05);
+    }
+
+    .step::before {
+      counter-increment: phase;
+      content: counter(phase);
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fff;
+      font-weight: 950;
+    }
+
+    .step h3 { color: var(--deep); }
+
+    .task-list {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .task-list li {
+      position: relative;
+      padding-left: 24px;
+      color: #344c3e;
+    }
+
+    .task-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.65em;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(0, 177, 79, 0.12);
+    }
+
+    .prompt {
+      margin: 16px 0 0;
+      padding: 18px;
+      border: 1px solid #c7e9d4;
+      border-radius: 8px;
+      background: #0f1f17;
+      color: #e9fff1;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 15px;
+      line-height: 1.72;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .box {
+      width: 22px;
+      height: 22px;
+      margin-top: 3px;
+      border: 2px solid var(--green);
+      border-radius: 6px;
+      background: var(--pale);
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .bad { border-top: 5px solid var(--coral); }
+    .good { border-top: 5px solid var(--green); }
+
+    .note {
+      padding: 18px;
+      border-left: 5px solid var(--green);
+      border-radius: 8px;
+      background: var(--pale);
+      color: #2b4436;
+      font-weight: 750;
+    }
+
+    .artifact {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .artifact code {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: var(--mint);
+      color: var(--deep);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    .install-steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+      counter-reset: install;
+    }
+
+    .install-step {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(16, 32, 24, 0.05);
+    }
+
+    .install-step::before {
+      counter-increment: install;
+      content: counter(install);
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--green);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .repo-link {
+      overflow-wrap: anywhere;
+      font-weight: 850;
+    }
+
+    .icon {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--mint);
+      color: var(--deep);
+      font-size: 24px;
+      font-weight: 950;
+    }
+
+    .references {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .references li { margin-bottom: 16px; }
+    .references span {
+      display: block;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 28px 0 42px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .two,
+      .three,
+      .four,
+      .timeline,
+      .compare {
+        grid-template-columns: 1fr;
+      }
+
+      .slide {
+        min-height: auto;
+        padding: 58px 0;
+      }
+
+      .board { min-height: auto; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 26px, 1160px); }
+      h1 { font-size: 40px; }
+      h2 { font-size: 34px; }
+      .card,
+      .step,
+      .board { padding: 18px; }
+      .phase-mini {
+        grid-template-columns: 46px minmax(0, 1fr);
+      }
+      .install-step {
+        grid-template-columns: 1fr;
+      }
+      .phase-letter {
+        width: 46px;
+        height: 46px;
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="slide">
+      <div class="wrap hero grid">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>Codex Skill 工作流</div>
+          <h1>EPCC：让 Codex 做事更稳</h1>
+          <p class="lede">
+            EPCC 是一套适合复杂任务的 Skill（Skill，可复用任务能力/固定招式）：先探索，再计划，再编码，最后提交。它帮助我们把“快点做”变成“先想清楚，再一步步做对”。
+          </p>
+          <div class="hero-actions">
+            <span class="pill">Explore</span>
+            <span class="pill">Plan</span>
+            <span class="pill">Code</span>
+            <span class="pill">Commit</span>
+          </div>
+        </div>
+        <div class="board" aria-label="EPCC 四阶段概览">
+          <div class="board-inner">
+            <div class="phase-mini">
+              <div class="phase-letter">E</div>
+              <div><b>Explore</b>先读项目，弄清背景、文件和限制。</div>
+            </div>
+            <div class="phase-mini">
+              <div class="phase-letter">P</div>
+              <div><b>Plan</b>写清规格、任务和完成标准。</div>
+            </div>
+            <div class="phase-mini">
+              <div class="phase-letter">C</div>
+              <div><b>Code</b>一次只做一个小任务，并及时检查。</div>
+            </div>
+            <div class="phase-mini">
+              <div class="phase-letter">C</div>
+              <div><b>Commit</b>通过检查后，只提交相关修改。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav aria-label="页面目录">
+      <div class="toc">
+        <a href="#install">安装 EPCC</a>
+        <a href="#question">课程问题</a>
+        <a href="#concepts">核心概念</a>
+        <a href="#flow">四步流程</a>
+        <a href="#demo">Codex demo</a>
+        <a href="#practice">学生任务</a>
+        <a href="#check">验收清单</a>
+        <a href="#references">参考资料</a>
+      </div>
+    </nav>
+
+    <section class="slide" id="install">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>Install EPCC</div>
+        <h2>让 Codex 装好 EPCC</h2>
+        <p class="lede">
+          我们主要使用 Codex（Codex，能读写代码、理解项目、运行检查的 AI 编程助手）。所以安装 EPCC 时，可以让 Codex 先读取 GitHub 上的 EPCC 资料，再自动整理成 Codex Skill（Skill，可复用任务能力/固定招式）格式。
+        </p>
+        <div class="grid two">
+          <div class="card accent">
+            <span class="label">资料来源</span>
+            <h3>先给 Codex 一个可靠来源</h3>
+            <p>
+              参考仓库：
+              <a class="repo-link" href="https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock/tree/main/assets/claude-code-plugins/plugins/epcc-workflow">aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock</a>
+            </p>
+            <p>插件路径：<strong>assets/claude-code-plugins/plugins/epcc-workflow</strong></p>
+            <p>这份资料原本是 Claude Code plugin，包含 12 个专门 agent、4 个 EPCC 命令和自动恢复 hook。课堂里不要求照搬全部工程配置，而是让 Codex 提取适合我们的 EPCC 工作流。</p>
+          </div>
+          <div class="card">
+            <span class="label">课堂说法</span>
+            <h3>Codex 来做转换</h3>
+            <p>学生不需要手动研究插件目录。我们只需要告诉 Codex：请阅读这个仓库，保留 Explore、Plan、Code、Commit 的核心规则，并生成一个可以放进本机 Codex skills 目录的 Skill。</p>
+          </div>
+        </div>
+        <div class="install-steps">
+          <div class="install-step">
+            <div>
+              <h3>复制安装 Prompt</h3>
+              <p>把下面这段话发给 Codex，让 Codex 帮你完成读取、转换和安装。</p>
+              <div class="prompt">请帮我安装 EPCC 工作流 Skill。
+
+资料来源：
+https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock/tree/main/assets/claude-code-plugins/plugins/epcc-workflow
+
+要求：
+1. 先读取这个 GitHub 仓库里的 epcc-workflow 插件资料。
+2. 它原本是 Claude Code plugin，请不要直接照搬插件格式。
+3. 请提取适合 Codex 使用的 EPCC 核心规则：Explore、Plan、Code、Commit。
+4. 请生成 Codex Skill 格式，安装到本机 Codex skills 目录。
+5. 安装前如果目标目录已存在，请先告诉我差异，不要直接覆盖。
+6. 安装后告诉我如何使用，例如“请使用 EPCC 工作流完成这个任务”。</div>
+            </div>
+          </div>
+          <div class="install-step">
+            <div>
+              <h3>观察 Codex 做了什么</h3>
+              <p>看 Codex 是否先读资料、再整理规则、最后写入 Skill 文件。不要只看“装好了”，还要看它有没有说明来源和限制。</p>
+              <ul class="task-list">
+                <li>是否保留 EPCC 四步流程</li>
+                <li>是否说明这是从 Claude Code plugin 转换而来</li>
+                <li>是否避免覆盖已有 Skill</li>
+                <li>是否给出使用方法</li>
+              </ul>
+            </div>
+          </div>
+          <div class="install-step">
+            <div>
+              <h3>用一句话启动</h3>
+              <p>安装完成后，在复杂任务前加上这句话：</p>
+              <div class="prompt">请使用 EPCC 工作流完成这个任务。</div>
+              <p>Codex 应该先进入 Explore 和 Plan，再开始 Code，最后根据需要做 Commit。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="question">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>Lesson Question</div>
+        <h2>为什么不能一上来就改代码？</h2>
+        <div class="grid two">
+          <div class="card accent">
+            <span class="label">常见问题</span>
+            <h3>任务说得太快</h3>
+            <p>如果只说“帮我做个页面”，Codex（Codex，能读写代码和运行检查的 AI 编程助手）可能不知道目标、风格、文件位置和怎样算完成。</p>
+          </div>
+          <div class="card accent">
+            <span class="label">EPCC 的答案</span>
+            <h3>先把路标立好</h3>
+            <p>EPCC 把任务拆成探索、计划、编码、提交四个阶段。每一步都有产物，老师和学生都能检查“现在做到哪了”。</p>
+          </div>
+        </div>
+        <p class="note">一句话记忆：EPCC 不是让 Codex 变慢，而是让 Codex 少走弯路。</p>
+      </div>
+    </section>
+
+    <section class="slide" id="concepts">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>Key Concepts</div>
+        <h2>先认识 4 个关键词</h2>
+        <div class="grid four">
+          <div class="card">
+            <span class="label">Skill</span>
+            <h3>固定招式</h3>
+            <p>Skill（Skill，可复用任务能力/固定招式）把一套常用步骤保存下来，下次遇到类似任务可以继续使用。</p>
+          </div>
+          <div class="card">
+            <span class="label">Spec</span>
+            <h3>任务规格</h3>
+            <p>Spec（Specification，规格说明）说明要做什么、给谁用、有什么限制、怎样算完成。</p>
+          </div>
+          <div class="card">
+            <span class="label">Task</span>
+            <h3>小任务</h3>
+            <p>Task（Task，任务）是可以单独完成和检查的一小步。EPCC 鼓励一次只推进一个清楚的小任务。</p>
+          </div>
+          <div class="card">
+            <span class="label">Acceptance</span>
+            <h3>完成标准</h3>
+            <p>Acceptance Criteria（Acceptance Criteria，完成标准）告诉我们：看到什么结果，就可以说这一小步完成了。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="flow">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>Workflow</div>
+        <h2>EPCC 四步流程</h2>
+        <div class="timeline">
+          <article class="step">
+            <h3>Explore</h3>
+            <p>先读项目和资料，理解现状。不要急着改文件。</p>
+            <ul class="task-list">
+              <li>看目录和核心文档</li>
+              <li>找已有风格和规则</li>
+              <li>记录到 <strong>EPCC_EXPLORE.md</strong></li>
+            </ul>
+          </article>
+          <article class="step">
+            <h3>Plan</h3>
+            <p>把目标变成规格和任务清单，让每一步都能被检查。</p>
+            <ul class="task-list">
+              <li>写清输出物</li>
+              <li>列出验收标准</li>
+              <li>记录到 <strong>EPCC_SPEC.md</strong> 和 <strong>EPCC_TASKS.md</strong></li>
+            </ul>
+          </article>
+          <article class="step">
+            <h3>Code</h3>
+            <p>按任务清单逐步实现，每完成一小步就验证。</p>
+            <ul class="task-list">
+              <li>只改相关文件</li>
+              <li>保留有用结构</li>
+              <li>记录到 <strong>EPCC_CODE.md</strong></li>
+            </ul>
+          </article>
+          <article class="step">
+            <h3>Commit</h3>
+            <p>确认质量后，只把相关修改提交成一个清楚的检查点。</p>
+            <ul class="task-list">
+              <li>运行检查</li>
+              <li>只暂存相关文件</li>
+              <li>记录到 <strong>EPCC_COMMIT.md</strong></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="demo">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>Teacher Demo</div>
+        <h2>老师如何演示</h2>
+        <div class="compare">
+          <div class="card bad">
+            <span class="label">不推荐</span>
+            <h3>一句话催 Codex 开工</h3>
+            <div class="prompt">帮我做一个学习工具页面，快点。</div>
+            <p>问题：没有目标、对象、限制、验收标准，也没有要求先理解项目。</p>
+          </div>
+          <div class="card good">
+            <span class="label">推荐</span>
+            <h3>要求使用 EPCC</h3>
+            <div class="prompt">请使用 EPCC 工作流，为本项目制作一个学生版 HTML 课件。
+
+目标：介绍一个 Codex 工作流。
+对象：初一学生。
+限制：中文、light mode、Grab 绿、不要改无关文件。
+完成标准：有课程问题、核心概念、Codex demo、学生任务、验收清单、反思问题和参考资料；HTML 能通过基础检查。</div>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <span class="label">演示观察点</span>
+            <ul class="task-list">
+              <li>Codex 是否先读项目规则</li>
+              <li>是否写出规格和任务清单</li>
+              <li>是否一次只做一个小任务</li>
+              <li>是否运行检查再总结</li>
+            </ul>
+          </div>
+          <div class="card">
+            <span class="label">老师追问</span>
+            <ul class="task-list">
+              <li>如果没有 Explore，会漏掉什么？</li>
+              <li>如果没有 Plan，怎么知道做完了？</li>
+              <li>如果没有 Check，怎么发现页面坏了？</li>
+              <li>如果没有 Commit，怎么回到可用版本？</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="practice">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>Student Practice</div>
+        <h2>学生模仿任务</h2>
+        <div class="grid two">
+          <div class="card accent">
+            <span class="label">任务</span>
+            <h3>给自己的小工具做 EPCC 计划</h3>
+            <p>选择一个学习生活小工具，例如单词卡、错题整理器、作息规划器。先不要写代码，只让 Codex 用 EPCC 帮你探索和计划。</p>
+            <div class="prompt">请使用 EPCC 工作流，帮我规划一个小工具。
+
+工具名称：____
+使用者：____
+解决的问题：____
+限制：只做一个 HTML 文件，适合初一学生使用。
+完成标准：页面能打开，有输入区、结果区、检查清单，并且文字清楚。</div>
+          </div>
+          <div class="card">
+            <span class="label">替换练习</span>
+            <h3>把空白换成自己的内容</h3>
+            <ul class="task-list">
+              <li>工具名称可以换成“英语单词卡”</li>
+              <li>使用者可以换成“我和同桌”</li>
+              <li>问题可以换成“复习单词容易忘”</li>
+              <li>限制可以增加“不要联网，不保存隐私”</li>
+            </ul>
+          </div>
+        </div>
+        <div class="grid three">
+          <div class="artifact">
+            <div class="icon">1</div>
+            <div>
+              <h3>先看探索</h3>
+              <p>检查 <code>EPCC_EXPLORE.md</code> 里有没有写清项目背景和限制。</p>
+            </div>
+          </div>
+          <div class="artifact">
+            <div class="icon">2</div>
+            <div>
+              <h3>再看计划</h3>
+              <p>检查 <code>EPCC_SPEC.md</code> 和 <code>EPCC_TASKS.md</code> 是否能指导下一步。</p>
+            </div>
+          </div>
+          <div class="artifact">
+            <div class="icon">3</div>
+            <div>
+              <h3>最后决定</h3>
+              <p>确认计划合理后，再让 Codex 进入 Code 阶段。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="check">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>Verification</div>
+        <h2>验收清单</h2>
+        <div class="grid two">
+          <div class="check"><span class="box"></span><p>我能用自己的话解释 Skill（Skill，可复用任务能力/固定招式）为什么适合保存工作流。</p></div>
+          <div class="check"><span class="box"></span><p>我能说出 EPCC 的四步：Explore、Plan、Code、Commit。</p></div>
+          <div class="check"><span class="box"></span><p>我知道复杂任务不能直接开改，要先理解项目和限制。</p></div>
+          <div class="check"><span class="box"></span><p>我能写出一个带目标、对象、限制和完成标准的 Codex Prompt（Prompt，提示词）。</p></div>
+          <div class="check"><span class="box"></span><p>我能检查 EPCC 记录文件，判断 Codex 有没有按步骤工作。</p></div>
+          <div class="check"><span class="box"></span><p>我知道危险操作、删除文件、提交代码之前都需要更谨慎地确认。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>Reflection</div>
+        <h2>复盘问题</h2>
+        <div class="grid three">
+          <div class="card">
+            <span class="label">问题 1</span>
+            <h3>哪一步最容易被跳过？</h3>
+            <p>想一想：你平时是不是最想直接进入 Code？为什么？</p>
+          </div>
+          <div class="card">
+            <span class="label">问题 2</span>
+            <h3>谁负责判断？</h3>
+            <p>Codex 可以执行任务，但目标、限制、安全和是否满意，仍然需要人来判断。</p>
+          </div>
+          <div class="card">
+            <span class="label">问题 3</span>
+            <h3>怎样越用越省力？</h3>
+            <p>当一套步骤反复有用时，就可以沉淀成 Skill，下次让 Codex 直接复用。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="references">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>References</div>
+        <h2>参考资料</h2>
+        <ol class="references">
+          <li>
+            OpenAI Codex Skills
+            <span>说明 Skill 如何把说明、资料和脚本组织成可复用能力。本页借鉴它来解释“固定招式”和可复用工作流。</span>
+          </li>
+          <li>
+            AWS Solutions Library Claude Code Plugins Marketplace
+            <span>提供 EPCC 插件来源和上下文。本页没有要求学生直接使用 Claude Code plugin 命令，而是把它作为 Codex 转换 Skill 的参考资料。</span>
+          </li>
+          <li>
+            AWS Solutions Library EPCC Workflow Plugin
+            <span>该插件位于仓库的 `assets/claude-code-plugins/plugins/epcc-workflow`，包含 12 个专门 agent、EPCC 命令和自动恢复 hook。本页借用它的 Explore、Plan、Code、Commit 思路，并说明如何让 Codex 转换成 Codex Skill。</span>
+          </li>
+          <li>
+            OpenAI Codex Best Practices
+            <span>强调目标、上下文、限制、完成标准、计划和验证。本页把这些做法转译成适合初一学生理解的 EPCC 使用方式。</span>
+          </li>
+          <li>
+            本项目课程大纲
+            <span>本项目把 Codex 贯穿 AI、LLM、Agent、Skill、Sub-agent、MCP 和 Automation 的学习路线。本页作为 Skill 工作流补充材料。</span>
+          </li>
+          <li>
+            本机 EPCC Skill 说明
+            <span>安装路径为 <strong>/Users/hushijin/.codex/skills/epcc-workflow/SKILL.md</strong>。本页的 Explore、Plan、Code、Commit 四阶段来自该 Skill。</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    EPCC Skill 工作流介绍 · light mode · Grab green
+  </footer>
+</body>
+</html>
