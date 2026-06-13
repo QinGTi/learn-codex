@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 1 课：AI 不是魔法</title>
+  <style>
+    :root {
+      --green: #00b14f;
+      --deep: #006f3a;
+      --mint: #e7faef;
+      --pale: #f7fff9;
+      --ink: #102018;
+      --muted: #5d7166;
+      --line: #d8ebdf;
+      --card: #ffffff;
+      --teal: #00a8a8;
+      --lime: #b7f34b;
+      --yellow: #ffd166;
+      --coral: #ff7a59;
+      --blue: #4b8cff;
+      --shadow: 0 18px 46px rgba(0, 111, 58, 0.13);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 9% 6%, rgba(0, 177, 79, 0.16), transparent 25rem),
+        radial-gradient(circle at 90% 6%, rgba(0, 168, 168, 0.13), transparent 25rem),
+        linear-gradient(180deg, #fbfffc 0%, #ffffff 40%, #f3fbf6 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.68;
+    }
+
+    p { margin: 0 0 14px; }
+    a { color: var(--deep); text-underline-offset: 0.22em; }
+    strong { color: #062d19; }
+
+    .wrap {
+      width: min(1160px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .slide {
+      min-height: 100vh;
+      display: grid;
+      align-content: center;
+      padding: 72px 0;
+      border-bottom: 1px solid rgba(0, 177, 79, 0.1);
+    }
+
+    .hero {
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--deep);
+      font-weight: 950;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(0, 177, 79, 0.13);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(44px, 7.5vw, 92px);
+      line-height: 1.01;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(34px, 5vw, 64px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      line-height: 1.28;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 820px;
+      margin: 24px 0 30px;
+      color: #31483b;
+      font-size: clamp(18px, 2.2vw, 23px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      padding: 8px 14px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--deep);
+      font-weight: 900;
+    }
+
+    .mission {
+      position: relative;
+      min-height: 560px;
+      padding: 26px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .mission::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 177, 79, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 177, 79, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, #000, transparent 82%);
+    }
+
+    .mission-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 14px;
+    }
+
+    .quest-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(16, 32, 24, 0.05);
+    }
+
+    .quest-card b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--deep);
+      font-size: 19px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 12px 18px;
+      border-block: 1px solid rgba(0, 177, 79, 0.12);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .toc {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .toc a {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border: 1px solid rgba(0, 177, 79, 0.16);
+      border-radius: 8px;
+      background: var(--pale);
+      color: #244332;
+      font-size: 14px;
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      min-height: 100%;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: 0 10px 28px rgba(16, 32, 24, 0.05);
+    }
+
+    .card.big {
+      min-height: 230px;
+      display: grid;
+      align-content: start;
+    }
+
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      margin-bottom: 16px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .accent { border-left: 6px solid var(--green); }
+    .warm { border-left-color: var(--yellow); }
+    .blue { border-left-color: var(--blue); }
+    .coral { border-left-color: var(--coral); }
+
+    .challenge {
+      padding: 30px;
+      border-radius: 14px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(0, 177, 79, 0.96), rgba(0, 168, 168, 0.96)),
+        radial-gradient(circle at 84% 0%, rgba(183, 243, 75, 0.42), transparent 20rem);
+      box-shadow: var(--shadow);
+    }
+
+    .challenge h2,
+    .challenge strong { color: #fff; }
+    .challenge p { color: #ecfff3; }
+
+    .task-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: task;
+    }
+
+    .task-list li {
+      counter-increment: task;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 9px 24px rgba(16, 32, 24, 0.045);
+    }
+
+    .task-list li::before {
+      content: counter(task);
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-weight: 950;
+    }
+
+    .prompt {
+      margin: 16px 0 0;
+      padding: 18px;
+      overflow-x: auto;
+      border-radius: 8px;
+      background: #102018;
+      color: #dff8ea;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 15px;
+      line-height: 1.58;
+      white-space: pre-wrap;
+    }
+
+    .choice {
+      min-height: 170px;
+      padding: 22px;
+      border: 2px solid rgba(0, 177, 79, 0.18);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(16, 32, 24, 0.05);
+    }
+
+    .choice h3 {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--deep);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .score {
+      min-height: 160px;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      text-align: center;
+    }
+
+    .score b {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 12px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-size: 26px;
+    }
+
+    .safe-card {
+      padding: 28px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .safe-card ul {
+      display: grid;
+      gap: 12px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .safe-card li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .box {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--green);
+      border-radius: 6px;
+      background: var(--pale);
+    }
+
+    .final {
+      text-align: center;
+    }
+
+    .final .unlock {
+      display: inline-grid;
+      place-items: center;
+      width: min(320px, 80vw);
+      min-height: 320px;
+      margin: 22px auto;
+      padding: 28px;
+      border-radius: 24px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, var(--green), var(--teal));
+      box-shadow: var(--shadow);
+    }
+
+    .unlock b {
+      display: block;
+      font-size: 52px;
+      line-height: 1;
+    }
+
+    .unlock span {
+      display: block;
+      margin-top: 14px;
+      font-size: 26px;
+      font-weight: 950;
+    }
+
+    details {
+      margin: 0 0 52px;
+      padding: 22px;
+      border-radius: 12px;
+      color: #f1fff6;
+      background: #102018;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--lime);
+      font-weight: 950;
+      font-size: 22px;
+    }
+
+    details a { color: var(--lime); }
+    details li { margin-bottom: 10px; }
+
+    .source-note {
+      margin: 7px 0 14px;
+      padding-left: 14px;
+      border-left: 3px solid rgba(183, 243, 75, 0.48);
+      color: #d8f5e2;
+      font-size: 15px;
+    }
+
+    @media (max-width: 940px) {
+      .hero,
+      .two,
+      .three,
+      .four,
+      .score-grid { grid-template-columns: 1fr; }
+      .slide { min-height: auto; padding: 58px 0; }
+      .mission { min-height: auto; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 24px, 1160px); }
+      .lede { font-size: 17px; }
+      .mission { padding: 16px; }
+      .task-list li { grid-template-columns: 1fr; }
+      .choice h3 { display: block; }
+      .badge { margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap slide hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> 第 1 课 · AI 任务训练营</div>
+      <h1>AI 不是魔法，是你的任务整理员</h1>
+      <p class="lede">今天你要训练一个很强、但也会猜错的工具：Codex（Codex，AI 编程助手）。它可以帮你拆任务、排顺序、找漏洞，但最后拍板的人是你。</p>
+      <div class="hero-actions">
+        <span class="pill">今天不背代码</span>
+        <span class="pill">今天要指挥 AI</span>
+        <span class="pill">今天要学会检查</span>
+      </div>
+    </div>
+    <aside class="mission">
+      <div class="mission-inner">
+        <div class="quest-card">
+          <b>你的任务</b>
+          <p>把一个乱糟糟的学习生活问题，变成一个能执行的计划。</p>
+        </div>
+        <div class="quest-card">
+          <b>你的工具</b>
+          <p>Codex（Codex，AI 编程助手）：会帮你想办法，但需要你讲清楚要求。</p>
+        </div>
+        <div class="quest-card">
+          <b>你的胜利条件</b>
+          <p>完成 2 个东西：学习生活问题清单 + AI 使用安全约定卡。</p>
+        </div>
+      </div>
+    </aside>
+  </header>
+
+  <nav>
+    <div class="toc">
+      <a href="#mission">任务</a>
+      <a href="#concept">能力卡</a>
+      <a href="#summon">召唤 Codex</a>
+      <a href="#choose">问题清单</a>
+      <a href="#judge">判断力</a>
+      <a href="#safety">安全卡</a>
+      <a href="#unlock">解锁</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="mission" class="wrap slide">
+      <div class="challenge">
+        <h2>开局问题</h2>
+        <p>今晚你有 5 件事：数学卷子、英语单词、语文背诵、洗澡、想玩 20 分钟。</p>
+        <p><strong>你会怎么排？</strong> 先自己说一个顺序，再看看 Codex（Codex，AI 编程助手）能不能帮你优化。</p>
+      </div>
+      <div class="grid three" style="margin-top: 16px;">
+        <article class="card big accent">
+          <div class="icon">1</div>
+          <h3>先自己想</h3>
+          <p>不要一上来就问 AI。先说出你自己的第一版安排。</p>
+        </article>
+        <article class="card big accent warm">
+          <div class="icon">2</div>
+          <h3>再问 Codex</h3>
+          <p>把目标、背景、限制说清楚，让 Codex（Codex，AI 编程助手）给一版计划。</p>
+        </article>
+        <article class="card big accent coral">
+          <div class="icon">3</div>
+          <h3>最后你判断</h3>
+          <p>AI 说得像真的，不代表一定适合你。你要检查。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="concept" class="wrap slide">
+      <div>
+        <h2>今天获得 4 张能力卡</h2>
+        <p class="lede">这些词看起来很高级，其实都能用生活例子理解。</p>
+      </div>
+      <div class="grid four">
+        <article class="card big accent">
+          <div class="icon">A</div>
+          <h3>AI</h3>
+          <p>AI（Artificial Intelligence，人工智能）：让机器完成需要一点“智能”的任务。今天它的任务是帮你整理问题，不是替你做决定。</p>
+        </article>
+        <article class="card big accent warm">
+          <div class="icon">S</div>
+          <h3>Search</h3>
+          <p>Search（Search，搜索）：在很多可能方案里找一个可用方案。比如今晚先做数学，还是先背英语。</p>
+        </article>
+        <article class="card big accent blue">
+          <div class="icon">C</div>
+          <h3>Classification</h3>
+          <p>Classification（Classification，分类）：把东西放进合适类别。比如把任务分成“必须做”“可以晚点做”“不能交给 AI”。</p>
+        </article>
+        <article class="card big accent coral">
+          <div class="icon">O</div>
+          <h3>Optimization</h3>
+          <p>Optimization（Optimization，优化）：从可用方案里找更好的方案。比如让计划更省力、更合理、更容易坚持。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="summon" class="wrap slide">
+      <div>
+        <h2>现在召唤 Codex</h2>
+        <p class="lede">复制这段话给 Codex。你的任务不是看热闹，而是盯住它有没有遵守规则。</p>
+      </div>
+      <div class="grid two">
+        <article class="card">
+          <h3>复制这段 Prompt</h3>
+          <div class="prompt">你现在是我的学习计划助手。请用初一学生能看懂的话帮我拆解任务。
+
+目标：我周末作业很多，想做一个不崩溃的计划。
+背景：我有数学卷子 2 张、英语单词 30 个、语文背诵 1 篇，还想保留一点休息时间。
+限制：
+1. 不要安排连续学习超过 45 分钟。
+2. 不要把游戏时间排在最前面。
+3. 不要替我完成作业，只帮我规划。
+完成标准：
+1. 给出一个周六下午 2 点到 6 点的计划表。
+2. 标出每段任务属于 Search（Search，搜索）、Classification（Classification，分类）、Optimization（Optimization，优化）中的哪一种思路。
+3. 最后给我 3 个需要自己判断的提醒。
+
+请先给计划，再解释为什么这样安排。</div>
+        </article>
+        <article class="card">
+          <h3>盯住这 4 件事</h3>
+          <ul class="task-list">
+            <li>它有没有听懂目标？</li>
+            <li>它有没有遵守限制？</li>
+            <li>它有没有安排休息？</li>
+            <li>它有没有提醒你自己判断？</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="choose" class="wrap slide">
+      <div>
+        <h2>写出你的问题清单</h2>
+        <p class="lede">第 1 课的真正产出之一：写出 3 个可以交给 AI（Artificial Intelligence，人工智能）帮忙拆解的真实问题。</p>
+      </div>
+      <div class="grid three">
+        <article class="choice">
+          <h3>英语单词总忘 <span class="badge">学习</span></h3>
+          <p>我背了又忘，想让 AI 帮我安排复习顺序。</p>
+        </article>
+        <article class="choice">
+          <h3>周末时间爆炸 <span class="badge">生活</span></h3>
+          <p>想学习、运动、玩游戏，但总感觉时间不够。</p>
+        </article>
+        <article class="choice">
+          <h3>想做兴趣资料库 <span class="badge">创造</span></h3>
+          <p>想整理游戏角色、漫画人物、球员资料或自己的收藏。</p>
+        </article>
+      </div>
+      <div class="card" style="margin-top: 16px;">
+        <h3>先写 3 个，再挑 1 个交给 Codex</h3>
+        <div class="grid three" style="margin-bottom: 16px;">
+          <article class="choice">
+            <h3>问题 1</h3>
+            <p>我想让 AI 帮我拆解：____</p>
+          </article>
+          <article class="choice">
+            <h3>问题 2</h3>
+            <p>我想让 AI 帮我拆解：____</p>
+          </article>
+          <article class="choice">
+            <h3>问题 3</h3>
+            <p>我想让 AI 帮我拆解：____</p>
+          </article>
+        </div>
+        <h3>把其中 1 个问题填进去</h3>
+        <div class="prompt">目标：我想解决____。
+背景：现在的情况是____。
+限制：不要____；必须____。
+完成标准：当____时，就算这个建议有用。
+
+请帮我给出一个简单计划，并告诉我：
+1. 你用了哪些 Search（Search，搜索）、Classification（Classification，分类）、Optimization（Optimization，优化）思路。
+2. 哪些地方不能完全相信 AI，需要我自己判断。</div>
+      </div>
+    </section>
+
+    <section id="judge" class="wrap slide">
+      <div>
+        <h2>给 AI 打分</h2>
+        <p class="lede">强的人不是“会问 AI”，而是“会检查 AI”。第 1 课必须做到：AI 能帮忙，但不能替自己判断。</p>
+      </div>
+      <div class="score-grid">
+        <article class="score">
+          <b>1</b>
+          <h3>目标</h3>
+          <p>它回答的是我的问题吗？</p>
+        </article>
+        <article class="score">
+          <b>2</b>
+          <h3>限制</h3>
+          <p>它有没有忘记我说的规则？</p>
+        </article>
+        <article class="score">
+          <b>3</b>
+          <h3>可做</h3>
+          <p>这个计划我真的能做到吗？</p>
+        </article>
+        <article class="score">
+          <b>4</b>
+          <h3>安全</h3>
+          <p>它有没有让我输入隐私或做危险事？</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="safety" class="wrap slide">
+      <div>
+        <h2>完成安全约定卡</h2>
+        <p class="lede">第 1 课的第二个产出：AI（Artificial Intelligence，人工智能）使用安全约定卡。把它当成你和 AI 合作的第一条规则。</p>
+      </div>
+      <div class="grid two">
+        <article class="safe-card">
+          <h3>我可以让 AI 帮我</h3>
+          <ul>
+            <li><span class="box"></span><span>拆解任务和制定计划。</span></li>
+            <li><span class="box"></span><span>解释概念，但我要听懂后再用。</span></li>
+            <li><span class="box"></span><span>生成练习题或检查思路。</span></li>
+            <li><span class="box"></span><span>帮我做学习生活小工具。</span></li>
+          </ul>
+        </article>
+        <article class="safe-card">
+          <h3>我不会交给 AI</h3>
+          <ul>
+            <li><span class="box"></span><span>真实姓名、住址、学校、手机号。</span></li>
+            <li><span class="box"></span><span>账号、密码、验证码。</span></li>
+            <li><span class="box"></span><span>自己或同学的隐私经历。</span></li>
+            <li><span class="box"></span><span>直接让 AI 完成作业并原样提交。</span></li>
+          </ul>
+        </article>
+      </div>
+      <div class="safe-card" style="margin-top: 16px;">
+        <h3>我今天亲口说出的安全规则</h3>
+        <ul>
+          <li><span class="box"></span><span>AI（Artificial Intelligence，人工智能）能帮我整理问题，但不能替我判断。</span></li>
+          <li><span class="box"></span><span>我不会输入的隐私信息是：____。</span></li>
+          <li><span class="box"></span><span>如果 AI 的建议不适合我，我会要求它修改。</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="unlock" class="wrap slide final">
+      <h2>今日能力解锁</h2>
+      <p class="lede" style="margin-inline: auto;">你今天不是学会了一个软件，而是学会了第一种 AI 合作能力。</p>
+      <div class="unlock">
+        <b>✓</b>
+        <span>我会把问题交给 AI，但由我负责判断</span>
+      </div>
+      <div class="grid three">
+        <article class="card">
+          <h3>交付 1</h3>
+          <p>我的 3 个学习生活问题清单完成了吗？</p>
+        </article>
+        <article class="card">
+          <h3>交付 2</h3>
+          <p>我的 AI 使用安全约定卡完成了吗？</p>
+        </article>
+        <article class="card">
+          <h3>口头验收</h3>
+          <p>我能说出 AI 能帮忙，但不能替我判断吗？</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <details>
+        <summary>老师参考资料</summary>
+        <h3>课程与教学参考</h3>
+        <ul>
+          <li><a href="https://stanford-cs324.github.io/winter2022/">Stanford CS324: Large Language Models</a>：斯坦福大学《大语言模型》课程。<div class="source-note">这门课从语言模型能力、局限、风险到社会影响建立完整视角。本课借鉴它的“能力与边界一起讲”的思路，第一节就强调 AI 能帮忙但不能替人判断。</div></li>
+          <li><a href="https://cs50.harvard.edu/ai/">Harvard CS50 AI with Python</a>：哈佛大学《基于 Python 的人工智能》课程。<div class="source-note">这门课把搜索、分类、推理等 AI 概念放进可理解的任务中。本课借鉴这种方式，用 Search（Search，搜索）、Classification（Classification，分类）、Optimization（Optimization，优化）解释学习生活计划。</div></li>
+          <li><a href="https://introtodeeplearning.com/">MIT 6.S191 Introduction to Deep Learning</a>：麻省理工学院《深度学习导论》课程。<div class="source-note">这门课强调短讲解配合实践。本课采用开场挑战、Codex demo、学生模仿、验收复盘的节奏。</div></li>
+        </ul>
+        <h3>Codex 官方参考</h3>
+        <ul>
+          <li><a href="https://developers.openai.com/codex/overview">OpenAI Codex overview</a>：OpenAI Codex 产品介绍。<div class="source-note">该资料说明 Codex（Codex，AI 编程助手）适合写代码、理解项目、调试、检查和自动化开发任务。本课把 Codex 作为老师演示与学生模仿的统一工具。</div></li>
+          <li><a href="https://developers.openai.com/codex/learn/best-practices">OpenAI Codex best practices</a>：OpenAI Codex 最佳实践。<div class="source-note">该资料强调 Goal（Goal，目标）、Context（Context，上下文）、Constraints（Constraints，限制）、Done when（Done when，完成标准）。本课的 Prompt 模板采用这条任务表达主线。</div></li>
+        </ul>
+      </details>
+    </section>
+  </main>
+</body>
+</html>
