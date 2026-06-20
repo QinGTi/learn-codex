@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 2 课：LLM 如何接话</title>
+  <style>
+    :root {
+      --green: #00b14f;
+      --deep: #006f3a;
+      --mint: #e7faef;
+      --pale: #f7fff9;
+      --ink: #102018;
+      --muted: #5d7166;
+      --line: #d8ebdf;
+      --card: #ffffff;
+      --teal: #00a8a8;
+      --lime: #b7f34b;
+      --yellow: #ffd166;
+      --coral: #ff7a59;
+      --blue: #4b8cff;
+      --shadow: 0 18px 46px rgba(0, 111, 58, 0.13);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 9% 6%, rgba(0, 177, 79, 0.16), transparent 25rem),
+        radial-gradient(circle at 90% 6%, rgba(0, 168, 168, 0.13), transparent 25rem),
+        linear-gradient(180deg, #fbfffc 0%, #ffffff 40%, #f3fbf6 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.68;
+    }
+
+    p { margin: 0 0 14px; }
+    a { color: var(--deep); text-underline-offset: 0.22em; }
+    strong { color: #062d19; }
+
+    .wrap {
+      width: min(1160px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .slide {
+      min-height: 100vh;
+      display: grid;
+      align-content: center;
+      padding: 72px 0;
+      border-bottom: 1px solid rgba(0, 177, 79, 0.1);
+    }
+
+    .hero {
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--deep);
+      font-weight: 950;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(0, 177, 79, 0.13);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(44px, 7.5vw, 92px);
+      line-height: 1.01;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(34px, 5vw, 64px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      line-height: 1.28;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 820px;
+      margin: 24px 0 30px;
+      color: #31483b;
+      font-size: clamp(18px, 2.2vw, 23px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      padding: 8px 14px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--deep);
+      font-weight: 900;
+    }
+
+    .mission {
+      position: relative;
+      min-height: 560px;
+      padding: 26px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .mission::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 177, 79, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 177, 79, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, #000, transparent 82%);
+    }
+
+    .mission-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 14px;
+    }
+
+    .quest-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(16, 32, 24, 0.05);
+    }
+
+    .quest-card b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--deep);
+      font-size: 19px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 12px 18px;
+      border-block: 1px solid rgba(0, 177, 79, 0.12);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .toc {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .toc a {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border: 1px solid rgba(0, 177, 79, 0.16);
+      border-radius: 8px;
+      background: var(--pale);
+      color: #244332;
+      font-size: 14px;
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      min-height: 100%;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: 0 10px 28px rgba(16, 32, 24, 0.05);
+    }
+
+    .card.big {
+      min-height: 230px;
+      display: grid;
+      align-content: start;
+    }
+
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      margin-bottom: 16px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .accent { border-left: 6px solid var(--green); }
+    .warm { border-left-color: var(--yellow); }
+    .blue { border-left-color: var(--blue); }
+    .coral { border-left-color: var(--coral); }
+
+    .challenge {
+      padding: 30px;
+      border-radius: 14px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(0, 177, 79, 0.96), rgba(0, 168, 168, 0.96)),
+        radial-gradient(circle at 84% 0%, rgba(183, 243, 75, 0.42), transparent 20rem);
+      box-shadow: var(--shadow);
+    }
+
+    .challenge h2,
+    .challenge strong { color: #fff; }
+    .challenge p { color: #ecfff3; }
+
+    .task-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: task;
+    }
+
+    .task-list li {
+      counter-increment: task;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 9px 24px rgba(16, 32, 24, 0.045);
+    }
+
+    .task-list li::before {
+      content: counter(task);
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-weight: 950;
+    }
+
+    .prompt {
+      margin: 16px 0 0;
+      padding: 18px;
+      overflow-x: auto;
+      border-radius: 8px;
+      background: #102018;
+      color: #dff8ea;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 15px;
+      line-height: 1.58;
+      white-space: pre-wrap;
+    }
+
+    .choice {
+      min-height: 170px;
+      padding: 22px;
+      border: 2px solid rgba(0, 177, 79, 0.18);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(16, 32, 24, 0.05);
+    }
+
+    .choice h3 {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--deep);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .score {
+      min-height: 160px;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      text-align: center;
+    }
+
+    .score b {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 12px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-size: 26px;
+    }
+
+    .safe-card {
+      padding: 28px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .safe-card ul {
+      display: grid;
+      gap: 12px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .safe-card li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .box {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--green);
+      border-radius: 6px;
+      background: var(--pale);
+    }
+
+    .final {
+      text-align: center;
+    }
+
+    .final .unlock {
+      display: inline-grid;
+      place-items: center;
+      width: min(320px, 80vw);
+      min-height: 320px;
+      margin: 22px auto;
+      padding: 28px;
+      border-radius: 24px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, var(--green), var(--teal));
+      box-shadow: var(--shadow);
+    }
+
+    .unlock b {
+      display: block;
+      font-size: 52px;
+      line-height: 1;
+    }
+
+    .unlock span {
+      display: block;
+      margin-top: 14px;
+      font-size: 26px;
+      font-weight: 950;
+    }
+
+    details {
+      margin: 0 0 52px;
+      padding: 22px;
+      border-radius: 12px;
+      color: #f1fff6;
+      background: #102018;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--lime);
+      font-weight: 950;
+      font-size: 22px;
+    }
+
+    details a { color: var(--lime); }
+    details li { margin-bottom: 10px; }
+
+    .source-note {
+      margin: 7px 0 14px;
+      padding-left: 14px;
+      border-left: 3px solid rgba(183, 243, 75, 0.48);
+      color: #d8f5e2;
+      font-size: 15px;
+    }
+
+    @media (max-width: 940px) {
+      .hero,
+      .two,
+      .three,
+      .four,
+      .score-grid { grid-template-columns: 1fr; }
+      .slide { min-height: auto; padding: 58px 0; }
+      .mission { min-height: auto; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 24px, 1160px); }
+      .lede { font-size: 17px; }
+      .mission { padding: 16px; }
+      .task-list li { grid-template-columns: 1fr; }
+      .choice h3 { display: block; }
+      .badge { margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap slide hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> 第 2 课 · LLM 接话实验室</div>
+      <h1>LLM 不是答案库，它是在接下一句</h1>
+      <p class="lede">今天你要拆开一个神秘现象：为什么 AI（Artificial Intelligence，人工智能）有时答得很像真的，却也会猜错？答案藏在 4 个词里：LLM（Large Language Model，大语言模型）、Token（Token，模型处理文字的小片段）、Training（Training，训练）、Inference（Inference，推理/生成）。</p>
+      <div class="hero-actions">
+        <span class="pill">今天不背模型公式</span>
+        <span class="pill">今天玩接话实验</span>
+        <span class="pill">今天学会怀疑</span>
+      </div>
+    </div>
+    <aside class="mission">
+      <div class="mission-inner">
+        <div class="quest-card">
+          <b>你的任务</b>
+          <p>观察 Codex（Codex，AI 编程助手）如何根据前半句话猜后半句。</p>
+        </div>
+        <div class="quest-card">
+          <b>你的发现</b>
+          <p>同一句开头，换一点上下文，AI 的回答可能完全不同。</p>
+        </div>
+        <div class="quest-card">
+          <b>你的胜利条件</b>
+          <p>完成一张“LLM 不是答案库”的解释卡，并说出它为什么会出错。</p>
+        </div>
+      </div>
+    </aside>
+  </header>
+
+  <nav>
+    <div class="toc">
+      <a href="#hook">接话</a>
+      <a href="#concept">能力卡</a>
+      <a href="#token">Token</a>
+      <a href="#demo">Codex demo</a>
+      <a href="#experiment">你的实验</a>
+      <a href="#mistake">为什么会错</a>
+      <a href="#unlock">解释卡</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="hook" class="wrap slide">
+      <div class="challenge">
+        <h2>先玩 3 轮接话</h2>
+        <p>老师说前半句，你马上接后半句。不要想太久，像 AI 一样“根据前面的话猜下一句”。</p>
+        <p><strong>例子：</strong>“今天放学以后，我最想……”</p>
+      </div>
+      <div class="grid three" style="margin-top: 16px;">
+        <article class="card big accent">
+          <div class="icon">1</div>
+          <h3>我打开冰箱</h3>
+          <p>你会接什么？“拿饮料”？“找冰淇淋”？还是“发现没吃的”？</p>
+        </article>
+        <article class="card big accent warm">
+          <div class="icon">2</div>
+          <h3>考试前一天</h3>
+          <p>你会接什么？“复习到很晚”？“发现没带书”？上下文会影响答案。</p>
+        </article>
+        <article class="card big accent coral">
+          <div class="icon">3</div>
+          <h3>如果我说错了</h3>
+          <p>说明我不是查答案，而是在猜一个最可能的后续。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="concept" class="wrap slide">
+      <div>
+        <h2>今天获得 4 张能力卡</h2>
+        <p class="lede">大学课程会讲语言模型、训练、推理和评估。我们先抓住初一能用的直觉。</p>
+      </div>
+      <div class="grid four">
+        <article class="card big accent">
+          <div class="icon">L</div>
+          <h3>LLM</h3>
+          <p>LLM（Large Language Model，大语言模型）：读过很多文字，能根据上下文生成回答的 AI 模型。</p>
+        </article>
+        <article class="card big accent warm">
+          <div class="icon">T</div>
+          <h3>Token</h3>
+          <p>Token（Token，模型处理文字的小片段）：模型看到的文字单位，可能是一个字、一个词或词的一部分。</p>
+        </article>
+        <article class="card big accent blue">
+          <div class="icon">Tr</div>
+          <h3>Training</h3>
+          <p>Training（Training，训练）：模型从大量例子中学习语言规律，就像看很多题后学会套路。</p>
+        </article>
+        <article class="card big accent coral">
+          <div class="icon">I</div>
+          <h3>Inference</h3>
+          <p>Inference（Inference，推理/生成）：模型根据你现在输入的话，生成它认为最可能有用的回答。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="token" class="wrap slide">
+      <div>
+        <h2>AI 看到的不是整篇作文</h2>
+        <p class="lede">它会把文字切成小片段，再根据这些片段和上下文继续生成。</p>
+      </div>
+      <div class="grid two">
+        <article class="card">
+          <h3>人看到的一句话</h3>
+          <div class="prompt">我今天想做一个英语单词复习计划。</div>
+        </article>
+        <article class="card">
+          <h3>模型可能看到的小片段</h3>
+          <div class="prompt">我 / 今天 / 想 / 做 / 一个 / 英语 / 单词 / 复习 / 计划</div>
+        </article>
+      </div>
+      <div class="challenge" style="margin-top: 16px;">
+        <h2>关键直觉</h2>
+        <p>Token（Token，模型处理文字的小片段）越清楚，上下文越完整，LLM（Large Language Model，大语言模型）越不容易乱猜。</p>
+      </div>
+    </section>
+
+    <section id="demo" class="wrap slide">
+      <div>
+        <h2>用 Codex 做接话小游戏</h2>
+        <p class="lede">复制这段给 Codex。让它生成一个“前半句接后半句”的小游戏，并要求它解释为什么可能猜错。</p>
+      </div>
+      <div class="grid two">
+        <article class="card">
+          <h3>复制这段 Prompt</h3>
+          <div class="prompt">你现在是我的 LLM 接话实验助手。请用初一学生能懂的话，帮我设计一个“根据前半句话猜后半句”的小游戏。
+
+目标：让我理解 LLM（Large Language Model，大语言模型）不是答案库，而是在根据上下文生成最可能的回答。
+要求：
+1. 给我 5 个前半句。
+2. 每个前半句给出 3 个可能的后半句。
+3. 说明为什么不同后半句都可能成立。
+4. 最后用 3 句话解释 Token（Token，模型处理文字的小片段）、Training（Training，训练）、Inference（Inference，推理/生成）。
+
+限制：
+1. 不要用大学生才懂的数学公式。
+2. 每句话都要适合初一学生。
+3. 不要说 LLM 一定正确，要提醒我它会猜错。</div>
+        </article>
+        <article class="card">
+          <h3>你要盯住 4 件事</h3>
+          <ul class="task-list">
+            <li>它有没有说清 LLM 不是答案库？</li>
+            <li>它有没有给出多个可能答案？</li>
+            <li>它有没有解释上下文为什么重要？</li>
+            <li>它有没有承认自己可能猜错？</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="experiment" class="wrap slide">
+      <div>
+        <h2>轮到你做实验</h2>
+        <p class="lede">选一个开头，让 Codex 接 3 种不同后半句。然后你来判断哪一种最靠谱。</p>
+      </div>
+      <div class="grid three">
+        <article class="choice">
+          <h3>学习场景 <span class="badge">学校</span></h3>
+          <p>“老师说这道题的关键是……”</p>
+        </article>
+        <article class="choice">
+          <h3>生活场景 <span class="badge">周末</span></h3>
+          <p>“周六下午我本来想休息，结果……”</p>
+        </article>
+        <article class="choice">
+          <h3>兴趣场景 <span class="badge">创造</span></h3>
+          <p>“我设计的游戏角色有一个秘密能力……”</p>
+        </article>
+      </div>
+      <div class="card" style="margin-top: 16px;">
+        <h3>把你的开头填进去</h3>
+        <div class="prompt">请根据这个前半句，生成 3 个不同的后半句：
+
+前半句：____
+
+请告诉我：
+1. 每个后半句为什么可能成立。
+2. 如果上下文变了，答案会怎么变。
+3. 哪一个答案最可能是乱猜的，为什么。</div>
+      </div>
+    </section>
+
+    <section id="mistake" class="wrap slide">
+      <div>
+        <h2>为什么 LLM 会出错？</h2>
+        <p class="lede">不是因为它“故意骗人”，而是因为它经常在根据已知信息生成最可能的回答。</p>
+      </div>
+      <div class="score-grid">
+        <article class="score">
+          <b>1</b>
+          <h3>信息太少</h3>
+          <p>上下文不够，它只能猜。</p>
+        </article>
+        <article class="score">
+          <b>2</b>
+          <h3>题目模糊</h3>
+          <p>你没说清楚，它会自己补脑。</p>
+        </article>
+        <article class="score">
+          <b>3</b>
+          <h3>像真不等于真</h3>
+          <p>句子顺，不代表事实对。</p>
+        </article>
+        <article class="score">
+          <b>4</b>
+          <h3>需要检查</h3>
+          <p>重要答案要验证来源和逻辑。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="unlock" class="wrap slide final">
+      <h2>完成解释卡</h2>
+      <p class="lede" style="margin-inline: auto;">第 2 课的交付物：用自己的话解释“LLM 不是答案库”。</p>
+      <div class="unlock">
+        <b>✓</b>
+        <span>我知道 LLM 为什么会猜错</span>
+      </div>
+      <div class="grid three">
+        <article class="card">
+          <h3>一句话解释</h3>
+          <p>LLM（Large Language Model，大语言模型）不是答案库，它是____。</p>
+        </article>
+        <article class="card">
+          <h3>一个出错原因</h3>
+          <p>它可能出错，因为____。</p>
+        </article>
+        <article class="card">
+          <h3>一个检查方法</h3>
+          <p>当它回答很自信时，我会____。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <details>
+        <summary>老师参考资料</summary>
+        <h3>课程与教学参考</h3>
+        <ul>
+          <li><a href="https://stanford-cs324.github.io/winter2022/">Stanford CS324: Large Language Models</a>：斯坦福大学《大语言模型》课程。<div class="source-note">这门课系统讨论语言模型能力、局限与风险。本课借鉴它对“能力与边界”的并重处理，让学生从第 2 课开始理解 LLM 会生成，也会出错。</div></li>
+          <li><a href="https://web.stanford.edu/class/cs25/">Stanford CS25: Transformers United</a>：斯坦福大学《Transformer 专题》课程。<div class="source-note">这门课围绕 Transformer（Transformer，现代大语言模型常用的神经网络结构）和上下文建模展开。本课不讲公式，只保留“模型会关注上下文并继续生成”的直觉。</div></li>
+          <li><a href="https://rdi.berkeley.edu/understanding_llms/s24">UC Berkeley Understanding Large Language Models</a>：加州大学伯克利分校《理解大语言模型》课程。<div class="source-note">这门课关注 LLM 的行为、上下文和评估。本课借鉴它的路线，把 Token、Training、Inference 与“为什么会猜错”连接起来。</div></li>
+          <li><a href="https://rycolab.io/classes/llm-s24/">ETH Zurich / Rycolab Large Language Models</a>：苏黎世联邦理工学院 / Rycolab《大语言模型》课程。<div class="source-note">这门课覆盖语言模型训练、推理和评估。本课把这些大学概念压缩成初一学生能操作的接话实验。</div></li>
+        </ul>
+        <h3>Codex 官方参考</h3>
+        <ul>
+          <li><a href="https://developers.openai.com/codex/overview">OpenAI Codex overview</a>：OpenAI Codex 产品介绍。<div class="source-note">该资料说明 Codex（Codex，AI 编程助手）适合生成代码、理解项目和调试。本课用 Codex 生成接话小游戏，保持 Codex 贯穿课程。</div></li>
+          <li><a href="https://developers.openai.com/codex/learn/best-practices">OpenAI Codex best practices</a>：OpenAI Codex 最佳实践。<div class="source-note">该资料强调清楚说明目标、上下文、限制和完成标准。本课的 demo prompt 继续训练学生给出清晰任务说明。</div></li>
+        </ul>
+      </details>
+    </section>
+  </main>
+</body>
+</html>
