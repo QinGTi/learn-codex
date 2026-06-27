@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>课后任务：设计一款 AI 小产品</title>
+  <style>
+    :root {
+      --green: #00b14f;
+      --deep: #006f3a;
+      --mint: #e7faef;
+      --pale: #f7fff9;
+      --ink: #102018;
+      --muted: #5d7166;
+      --line: #d8ebdf;
+      --card: #ffffff;
+      --teal: #00a8a8;
+      --lime: #b7f34b;
+      --yellow: #ffd166;
+      --coral: #ff7a59;
+      --blue: #4b8cff;
+      --shadow: 0 18px 46px rgba(0, 111, 58, 0.13);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 9% 6%, rgba(0, 177, 79, 0.16), transparent 25rem),
+        radial-gradient(circle at 90% 6%, rgba(0, 168, 168, 0.13), transparent 25rem),
+        linear-gradient(180deg, #fbfffc 0%, #ffffff 42%, #f3fbf6 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.68;
+    }
+
+    p { margin: 0 0 14px; }
+    a { color: var(--deep); text-underline-offset: 0.22em; }
+    strong { color: #062d19; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 74px 0;
+      border-bottom: 1px solid rgba(0, 177, 79, 0.1);
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-content: center;
+      padding: 72px 0 54px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--deep);
+      font-weight: 950;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(0, 177, 79, 0.13);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(42px, 7vw, 86px);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(32px, 4.8vw, 58px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 23px;
+      line-height: 1.28;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 840px;
+      margin: 24px 0 30px;
+      color: #31483b;
+      font-size: clamp(18px, 2.1vw, 23px);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 26px 0 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      padding: 8px 14px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--deep);
+      font-weight: 900;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(310px, 0.95fr);
+      gap: 38px;
+      align-items: center;
+    }
+
+    .brief-board {
+      position: relative;
+      min-height: 520px;
+      padding: 26px;
+      border: 1px solid rgba(0, 177, 79, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .brief-board::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 177, 79, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 177, 79, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, #000, transparent 84%);
+    }
+
+    .brief-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 14px;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(16, 32, 24, 0.05);
+    }
+
+    .mini-card b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--deep);
+      font-size: 19px;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: #33483d;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 12px 18px;
+      border-block: 1px solid rgba(0, 177, 79, 0.12);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-inner {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-inner a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--deep);
+      font-size: 14px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .nav-inner a:hover {
+      background: var(--mint);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: 0 12px 30px rgba(16, 32, 24, 0.06);
+    }
+
+    .panel.soft {
+      background: linear-gradient(180deg, #ffffff 0%, var(--pale) 100%);
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      position: relative;
+      padding: 14px 16px 14px 44px;
+      border: 1px solid rgba(0, 177, 79, 0.16);
+      border-radius: 8px;
+      background: #fff;
+      color: #30463a;
+      font-weight: 750;
+    }
+
+    .list li::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 21px;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 6px rgba(0, 177, 79, 0.12);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .product-card {
+      min-height: 132px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(16, 32, 24, 0.05);
+    }
+
+    .product-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--deep);
+      font-size: 19px;
+    }
+
+    .product-card span {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .template {
+      display: grid;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 14px;
+      align-items: stretch;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .field-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 78px;
+      border-radius: 8px;
+      background: var(--mint);
+      color: var(--deep);
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .lines {
+      display: grid;
+      align-content: center;
+      gap: 10px;
+      color: #31483b;
+      font-size: 18px;
+    }
+
+    .blank {
+      display: inline-block;
+      min-width: min(260px, 70vw);
+      border-bottom: 2px solid rgba(0, 111, 58, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .example {
+      margin-top: 28px;
+      padding: 24px;
+      border-left: 8px solid var(--green);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(16, 32, 24, 0.06);
+    }
+
+    .example h3 {
+      color: var(--deep);
+    }
+
+    .example dl {
+      display: grid;
+      gap: 14px;
+      margin: 16px 0 0;
+    }
+
+    .example dt {
+      color: var(--deep);
+      font-weight: 950;
+    }
+
+    .example dd {
+      margin: 0;
+      color: #30463a;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      font-weight: 800;
+      color: #30463a;
+    }
+
+    .box {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--green);
+      border-radius: 7px;
+      background: var(--pale);
+    }
+
+    .final-line {
+      margin-top: 28px;
+      padding: 24px;
+      border-radius: 8px;
+      background: #102018;
+      color: #f7fff9;
+      font-size: clamp(19px, 2.4vw, 25px);
+      font-weight: 900;
+    }
+
+    .final-line .blank {
+      min-width: min(420px, 74vw);
+      border-bottom-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .refs {
+      padding: 44px 0 58px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .refs h2 {
+      margin-bottom: 12px;
+      font-size: 24px;
+    }
+
+    .refs ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .refs li {
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .brief-board {
+        min-height: auto;
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrap {
+        width: min(100% - 28px, 1120px);
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 54px;
+      }
+
+      .section {
+        padding: 54px 0;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field {
+        grid-template-columns: 1fr;
+      }
+
+      .field-title {
+        min-height: 54px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Lesson 1-3 课后任务</div>
+        <h1>设计一款 AI 小产品</h1>
+        <p class="lede">这次不用写代码。你要写一份迷你产品文档，让别人看完以后知道：这个产品是做什么的、给谁用、不能做什么、怎样算做好。</p>
+        <div class="chips">
+          <span class="pill">产品文档</span>
+          <span class="pill">Prompt</span>
+          <span class="pill">Context</span>
+          <span class="pill">完成标准</span>
+        </div>
+      </div>
+
+      <div class="brief-board" aria-label="迷你产品文档四要素">
+        <div class="brief-inner">
+          <div class="mini-card">
+            <b>产品名称</b>
+            <p>它叫什么？名字要短，让人一看就知道大概用途。</p>
+          </div>
+          <div class="mini-card">
+            <b>产品目标</b>
+            <p>它想帮助谁解决什么具体问题？</p>
+          </div>
+          <div class="mini-card">
+            <b>使用规则</b>
+            <p>不能记录哪些隐私信息？不要替使用者做什么？</p>
+          </div>
+          <div class="mini-card">
+            <b>完成标准</b>
+            <p>做到哪几件能检查的事情，就算完成？</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav aria-label="页面导航">
+    <div class="nav-inner">
+      <a href="#choose">选择方向</a>
+      <a href="#template">填写模板</a>
+      <a href="#example">参考示例</a>
+      <a href="#check">提交检查</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section" id="choose">
+      <div class="wrap">
+        <div class="split">
+          <div>
+            <div class="eyebrow"><span class="dot"></span> 第一步</div>
+            <h2>先选一个小问题</h2>
+            <p class="lede">产品要小，只解决一个具体问题。不要写“帮助我学习”这种太大的目标，要写清楚它到底帮你做哪件事。</p>
+          </div>
+          <div class="panel soft">
+            <h3>可以从这些方向开始</h3>
+            <ul class="list">
+              <li>我经常忘记复习错题。</li>
+              <li>我背单词没有固定计划。</li>
+              <li>我不知道今天作业先做哪一个。</li>
+              <li>我读书后很少记录自己读了什么。</li>
+              <li>我想知道自己有没有坚持运动。</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="product-grid" aria-label="候选产品方向">
+          <div class="product-card">
+            <strong>错题提醒器</strong>
+            <span>记录错题原因，提醒下次复习。</span>
+          </div>
+          <div class="product-card">
+            <strong>背单词小助手</strong>
+            <span>安排每日单词，检查是否记住。</span>
+          </div>
+          <div class="product-card">
+            <strong>作业计划表</strong>
+            <span>把今天作业拆成顺序和时间。</span>
+          </div>
+          <div class="product-card">
+            <strong>阅读记录器</strong>
+            <span>记录书名、页数和一句收获。</span>
+          </div>
+          <div class="product-card">
+            <strong>运动打卡表</strong>
+            <span>记录每天有没有完成运动。</span>
+          </div>
+          <div class="product-card">
+            <strong>零花钱记录表</strong>
+            <span>记录花费项目，学会分类整理。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="template">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span> 第二步</div>
+        <h2>写一份迷你产品文档</h2>
+        <p class="lede">把想法写成清楚的任务说明。以后交给 Codex（Codex，AI 编程助手）时，它才知道该往哪个方向帮你。</p>
+
+        <div class="template" aria-label="迷你产品文档模板">
+          <div class="field">
+            <div class="field-title">1. 产品名称</div>
+            <div class="lines">
+              <p>它叫：<span class="blank"></span></p>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-title">2. 产品目标</div>
+            <div class="lines">
+              <p>它想帮助 <span class="blank"></span></p>
+              <p>解决 <span class="blank"></span> 这个问题。</p>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-title">3. 使用规则</div>
+            <div class="lines">
+              <p>不能记录：<span class="blank"></span></p>
+              <p>不要帮我：<span class="blank"></span></p>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-title">4. 完成标准</div>
+            <div class="lines">
+              <p>当它能够 <span class="blank"></span></p>
+              <p>并且 <span class="blank"></span>，就算完成。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="example">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span> 参考示例</div>
+        <h2>错题提醒器</h2>
+        <p class="lede">示例不是标准答案。你可以换成自己的学习或生活问题。</p>
+
+        <div class="example">
+          <h3>迷你产品文档</h3>
+          <dl>
+            <dt>1. 产品名称</dt>
+            <dd>错题提醒器</dd>
+
+            <dt>2. 产品目标</dt>
+            <dd>帮助我记录数学错题，并提醒我隔几天重新复习，避免同样的题反复做错。</dd>
+
+            <dt>3. 使用规则</dt>
+            <dd>不能记录真实姓名、学校、班级。不要帮我直接抄答案，只能提醒我复习和整理错误原因。</dd>
+
+            <dt>4. 完成标准</dt>
+            <dd>能够记录错题的科目、错误原因、复习日期；能够显示今天需要复习的错题；每次使用不超过 3 分钟。</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="check">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span> 提交前检查</div>
+        <h2>看它是不是一个好任务</h2>
+        <p class="lede">完成后，给自己的产品文档打勾。能被检查的说明，才更容易被 Codex 理解和执行。</p>
+
+        <div class="checklist">
+          <div class="check"><span class="box"></span><span>我没有写代码，只写了产品说明。</span></div>
+          <div class="check"><span class="box"></span><span>我的产品只解决一个具体问题。</span></div>
+          <div class="check"><span class="box"></span><span>我写清楚了谁会使用它。</span></div>
+          <div class="check"><span class="box"></span><span>我写清楚了不能记录哪些隐私信息。</span></div>
+          <div class="check"><span class="box"></span><span>我的完成标准可以被别人检查。</span></div>
+        </div>
+
+        <div class="final-line">
+          我觉得这个产品最难做的地方是：<span class="blank"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="refs">
+    <div class="wrap">
+      <h2>参考</h2>
+      <ol>
+        <li><a href="junior-ai-llm-agent-codex-syllabus.md">课程总纲</a>：用于保持任务与第 1-3 课的学习顺序一致，重点连接 AI 边界、LLM 生成方式、Prompt 与 Context。</li>
+        <li><a href="lesson-03-prompt-context-student.html">第 3 课：Prompt 与 Context</a>：本任务沿用目标、背景、限制、完成标准的表达方式，把它改写成学生能理解的迷你产品文档。</li>
+      </ol>
+    </div>
+  </footer>
+</body>
+</html>
